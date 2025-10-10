@@ -35,7 +35,7 @@ public class GetArtistRestTest {
 
         ArtistJson actualArtist = artistGatewayRestClient.getArtist(createdArtistId);
 
-        ArtistEntity expectedArtist = artistRepository.findArtistById(UUID.fromString(createdArtistId));
+        ArtistEntity expectedArtist = artistRepository.findArtistById2(UUID.fromString(createdArtistId));
         assertEquals(expectedArtist.getId(), actualArtist.id());
     }
 }

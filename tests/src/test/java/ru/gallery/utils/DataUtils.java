@@ -2,8 +2,6 @@ package ru.gallery.utils;
 
 import com.github.javafaker.Faker;
 import com.google.common.io.Resources;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import javax.annotation.Nonnull;
 import java.io.IOException;
@@ -11,6 +9,8 @@ import java.util.Base64;
 import java.util.function.Supplier;
 
 public class DataUtils {
+
+    public static final String DEFAULT_USERNAME = "12345";
 
     public static final String DEFAULT_PASSWORD = "12345";
 
@@ -87,7 +87,7 @@ public class DataUtils {
             byte[] bytes = Resources.toByteArray(Resources.getResource(path));
             return "data:image/jpeg;base64," + Base64.getEncoder().encodeToString(bytes);
         } catch (IllegalArgumentException | IOException e) {
-            System.err.println("### Изображение не найдено" );
+            System.err.println("### Изображение не найдено");
             e.printStackTrace();
 
             return "";

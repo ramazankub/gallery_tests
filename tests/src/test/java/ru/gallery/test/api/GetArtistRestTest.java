@@ -30,12 +30,12 @@ public class GetArtistRestTest {
                         randomArtistName(),
                         randomText(),
                         "123"
-        ));
+                ));
         String createdArtistId = createdArtistJson.id().toString();
 
         ArtistJson actualArtist = artistGatewayRestClient.getArtist(createdArtistId);
 
-        ArtistEntity expectedArtist = artistRepository.findArtistById2(UUID.fromString(createdArtistId));
+        ArtistEntity expectedArtist = artistRepository.findArtistById(UUID.fromString(createdArtistId));
         assertEquals(expectedArtist.getId(), actualArtist.id());
     }
 }

@@ -10,7 +10,7 @@ import ru.gallery.utils.DataUtils;
 import static ru.gallery.utils.DataUtils.DEFAULT_PASSWORD;
 import static ru.gallery.utils.DataUtils.DEFAULT_USERNAME;
 
-public class MuseumWebTest {
+public class MuseumWebTest extends BaseTest {
 
     private static final Config CFG = Config.getInstance();
 

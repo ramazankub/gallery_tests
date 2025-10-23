@@ -4,12 +4,14 @@ import com.codeborne.selenide.Configuration;
 import com.codeborne.selenide.Selenide;
 import com.codeborne.selenide.WebDriverRunner;
 import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.openqa.selenium.chrome.ChromeOptions;
 
 public class BaseTest {
 
     private static final String CHROME = "chrome";
 
+    @BeforeEach
     public void setUp() {
         Configuration.timeout = 30000;
         Configuration.pageLoadStrategy = "eager";

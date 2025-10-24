@@ -6,8 +6,10 @@ import retrofit2.converter.jackson.JacksonConverterFactory;
 import ru.gallery.api.ArtistGatewayApi;
 import ru.gallery.config.Config;
 import ru.gallery.model.ArtistJson;
+import ru.gallery.model.PageResponse;
 
 import java.io.IOException;
+import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -35,6 +37,19 @@ public class ArtistGatewayRestClient {
         assertThat(response.code()).isEqualTo(200);
 
         return response.body();
+    }
+
+    public List<ArtistJson> getAllArtists() {
+        final Response<PageResponse<ArtistJson>> response;
+        try {
+            response = artistGatewayApi.getAllArtists().execute();
+        } catch (IOException e) {
+            throw new AssertionError(e);
+        }
+        assertThat(response.code()).isEqualTo(200);
+        assertThat(response.body()).isNotNull();
+
+        return response.body().content();
     }
 
     public ArtistJson addArtist(String token, ArtistJson artist) {

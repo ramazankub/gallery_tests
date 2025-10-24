@@ -6,10 +6,14 @@ import ru.gallery.data.entity.ArtistEntity;
 import ru.gallery.model.ArtistJson;
 import ru.gallery.service.ArtistGatewayRestClient;
 import ru.gallery.service.AuthApiClient;
+import ru.gallery.utils.DataUtils;
 
 import java.util.UUID;
 
+import static org.assertj.core.api.SoftAssertions.assertSoftly;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static ru.gallery.utils.DataUtils.DEFAULT_PASSWORD;
+import static ru.gallery.utils.DataUtils.DEFAULT_USERNAME;
 import static ru.gallery.utils.DataUtils.randomArtistName;
 import static ru.gallery.utils.DataUtils.randomText;
 
@@ -17,31 +21,44 @@ public class UpdateArtistRestTest {
 
     private final ArtistGatewayRestClient artistGatewayRestClient = new ArtistGatewayRestClient();
 
+    private final ArtistRepository artistRepository = new ArtistRepository();
+
     private final AuthApiClient authApiClient = new AuthApiClient();
 
     @Test
     void updateArtistTest() {
-        final String token = authApiClient.login("test", "12345");
-        final String bearerToken = "Bearer " + token;
-
-        ArtistJson createdArtistJson = artistGatewayRestClient.addArtist(bearerToken,
-                new ArtistJson(
-                        null,
-                        randomArtistName(),
-                        randomText(),
-                        ""
-        ));
-
-        ArtistJson actualArtist = artistGatewayRestClient.updateArtist(bearerToken, new ArtistJson(
-                createdArtistJson.id(),
+        final String token = authApiClient.login(DEFAULT_USERNAME, DEFAULT_PASSWORD);
+        ArtistJson createdArtistJson = new ArtistJson(
+                null,
                 randomArtistName(),
                 randomText(),
                 ""
-        ));
+        );
+        UUID addedArtistId = artistGatewayRestClient.addArtist(token, createdArtistJson).id();
 
-        assertEquals(createdArtistJson.id(), actualArtist.id());
-        assertEquals(createdArtistJson.name(), actualArtist.name());
-        assertEquals(createdArtistJson.biography(), actualArtist.biography());
-        assertEquals(createdArtistJson.photo(), actualArtist.photo());
+        String photo = DataUtils.getImageByPathOrEmpty("img/artists/botticelli.jpg");
+        ArtistJson updatedArtistJson = new ArtistJson(
+                addedArtistId,
+                randomArtistName(),
+                randomText(),
+                photo
+        );
+        ArtistJson artistJsonResponse = artistGatewayRestClient.updateArtist(token, updatedArtistJson);
+
+        assertSoftly(softly -> {
+                    assertEquals(updatedArtistJson.id(), artistJsonResponse.id());
+                    assertEquals(updatedArtistJson.name(), artistJsonResponse.name());
+                    assertEquals(updatedArtistJson.biography(), artistJsonResponse.biography());
+                    assertEquals(updatedArtistJson.photo(), artistJsonResponse.photo());
+                }
+        );
+
+        ArtistEntity actualArtist = artistRepository.findArtistById(addedArtistId);
+        assertSoftly(softly -> {
+                    assertEquals(artistJsonResponse.id(), actualArtist.getId());
+                    assertEquals(updatedArtistJson.name(), actualArtist.getName());
+                    assertEquals(updatedArtistJson.biography(), actualArtist.getBiography());
+                }
+        );
     }
 }

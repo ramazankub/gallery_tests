@@ -110,6 +110,6 @@ public class AuthApiClient extends RestClient {
         preRequest(codeChallenge);
         String code = oAuthLogin(username, password);
 
-        return token(code, codeVerifier);
+        return "Bearer " + token(code, codeVerifier);
     }
 }

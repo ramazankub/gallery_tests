@@ -8,8 +8,6 @@ import ru.gallery.service.ArtistGatewayRestClient;
 import ru.gallery.service.AuthApiClient;
 import ru.gallery.utils.DataUtils;
 
-import java.util.UUID;
-
 import static org.assertj.core.api.SoftAssertions.assertSoftly;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static ru.gallery.utils.DataUtils.DEFAULT_PASSWORD;
@@ -17,7 +15,7 @@ import static ru.gallery.utils.DataUtils.DEFAULT_USERNAME;
 import static ru.gallery.utils.DataUtils.randomArtistName;
 import static ru.gallery.utils.DataUtils.randomText;
 
-public class GetArtistRestTest {
+public class AddArtistRestTest {
 
     private final ArtistGatewayRestClient artistGatewayRestClient = new ArtistGatewayRestClient();
 
@@ -26,8 +24,7 @@ public class GetArtistRestTest {
     private final AuthApiClient authApiClient = new AuthApiClient();
 
     @Test
-    void getArtistTest() {
-        final String token = authApiClient.login(DEFAULT_USERNAME, DEFAULT_PASSWORD);
+    void addArtistTest() {
         String photo = DataUtils.getImageByPathOrEmpty("img/artists/botticelli.jpg");
         ArtistJson artistJson = new ArtistJson(
                 null,
@@ -36,8 +33,9 @@ public class GetArtistRestTest {
                 photo
         );
 
-        UUID addedArtistId = artistGatewayRestClient.addArtist(token, artistJson).id();
-        ArtistJson artistJsonResponse = artistGatewayRestClient.getArtist(addedArtistId.toString());
+        final String token = authApiClient.login(DEFAULT_USERNAME, DEFAULT_PASSWORD);
+        ArtistJson artistJsonResponse = artistGatewayRestClient.addArtist(token, artistJson);
+
         assertSoftly(softly -> {
                     assertEquals(artistJson.name(), artistJsonResponse.name());
                     assertEquals(artistJson.biography(), artistJsonResponse.biography());
@@ -45,7 +43,8 @@ public class GetArtistRestTest {
                 }
         );
 
-        ArtistEntity actualArtist = artistRepository.findArtistById(addedArtistId);
+        ArtistEntity actualArtist = artistRepository.findArtistById(artistJsonResponse.id());
+
         assertSoftly(softly -> {
                     assertEquals(artistJsonResponse.id(), actualArtist.getId());
                     assertEquals(artistJson.name(), actualArtist.getName());

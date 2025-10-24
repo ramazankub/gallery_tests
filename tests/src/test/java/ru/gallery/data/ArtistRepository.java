@@ -5,6 +5,7 @@ import ru.gallery.config.Config;
 import ru.gallery.data.entity.ArtistEntity;
 
 import javax.annotation.Nonnull;
+import java.util.List;
 import java.util.UUID;
 
 import static ru.gallery.data.EntityManagers.em;
@@ -16,15 +17,23 @@ public class ArtistRepository {
     private final EntityManager entityManager = em(CFG.artistJdbcUrl());
 
     @Nonnull
-    public ArtistEntity create(ArtistEntity artist) {
-        entityManager.joinTransaction();
-        entityManager.persist(artist);
+    public ArtistEntity findArtistById(UUID id) {
+        String sql = "SELECT * FROM artist WHERE id = :id";
 
-        return artist;
+        return (ArtistEntity) entityManager
+                .createNativeQuery(sql, ArtistEntity.class)
+                .setParameter("id", id)
+                .getSingleResult();
     }
 
     @Nonnull
-    public ArtistEntity findArtistById(UUID id) {
-        return entityManager.find(ArtistEntity.class, id);
+    @SuppressWarnings("unchecked")
+    public List<ArtistEntity> findAllArtists(int count) {
+        String sql = "SELECT * FROM artist";
+
+        return entityManager
+                .createNativeQuery(sql, ArtistEntity.class)
+                .setMaxResults(count)
+                .getResultList();
     }
 }

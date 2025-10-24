@@ -8,16 +8,21 @@ import retrofit2.http.PATCH;
 import retrofit2.http.POST;
 import retrofit2.http.Path;
 import ru.gallery.model.ArtistJson;
+import ru.gallery.model.PageResponse;
 
 public interface ArtistGatewayApi {
 
     @GET("/api/artist/{id}")
     Call<ArtistJson> getArtist(@Path("id") String id);
 
+    @GET("/api/artist")
+    Call<PageResponse<ArtistJson>> getAllArtists();
+
     @POST("/api/artist")
     Call<ArtistJson> addArtist(@Header("Authorization") String bearerToken,
                                @Body ArtistJson artist);
+
     @PATCH("/api/artist")
     Call<ArtistJson> updateArtist(@Header("Authorization") String bearerToken,
-                               @Body ArtistJson artist);
+                                  @Body ArtistJson artist);
 }

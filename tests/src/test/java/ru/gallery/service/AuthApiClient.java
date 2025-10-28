@@ -7,6 +7,7 @@ import ru.gallery.api.AuthApi;
 import ru.gallery.api.core.RestClient;
 import ru.gallery.api.core.ThreadSafeCookieStore;
 
+import javax.annotation.Nonnull;
 import java.io.IOException;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -34,7 +35,27 @@ public class AuthApiClient extends RestClient {
         this.authApi = retrofit.create(AuthApi.class);
     }
 
-    public void getRegisterPage() {
+    public void createUser(@Nonnull String username, @Nonnull String password) {
+        getRegisterPage();
+        registerUser(
+                username,
+                password,
+                password,
+                ThreadSafeCookieStore.INSTANCE.cookieValue("XSRF-TOKEN")
+        );
+    }
+
+    public String login(@Nonnull String username, @Nonnull String password) {
+        String codeVerifier = generateCodeVerifier();
+        String codeChallenge = generateCodeChallenge(codeVerifier);
+
+        preRequest(codeChallenge);
+        String code = oAuthLogin(username, password);
+
+        return "Bearer " + token(code, codeVerifier);
+    }
+
+    private void getRegisterPage() {
         final Response<Void> response;
         try {
             response = authApi.getRegisterPage().execute();
@@ -44,10 +65,9 @@ public class AuthApiClient extends RestClient {
         assertThat(response.code()).isEqualTo(200);
     }
 
-    public void registerUser(String username, String password, String passwordSubmit) {
+    private void registerUser(String username, String password, String passwordSubmit, String csrf) {
         final Response<Void> response;
         try {
-            String csrf = ThreadSafeCookieStore.INSTANCE.cookieValue("XSRF-TOKEN");
             response = authApi.registerUser(username, password, passwordSubmit, csrf).execute();
         } catch (IOException e) {
             throw new AssertionError(e);
@@ -55,7 +75,7 @@ public class AuthApiClient extends RestClient {
         assertThat(response.code()).isEqualTo(201);
     }
 
-    public void preRequest(String codeChallenge) {
+    private void preRequest(String codeChallenge) {
         final Response<Void> response;
         try {
             response = authApi.authorize(
@@ -73,7 +93,7 @@ public class AuthApiClient extends RestClient {
         assertThat(response.code()).isEqualTo(200);
     }
 
-    public String oAuthLogin(String username, String password) {
+    private String oAuthLogin(String username, String password) {
         final Response<Void> response;
         try {
             response = authApi.login(
@@ -89,7 +109,7 @@ public class AuthApiClient extends RestClient {
         return StringUtils.substringAfter(url, "code=");
     }
 
-    public String token(String code, String codeVerifier) {
+    private String token(String code, String codeVerifier) {
         final Response<JsonNode> response;
         try {
             response = authApi.token(code, REDIRECT_URI, CLIENT_ID, codeVerifier, GRANT_TYPE).execute();
@@ -101,15 +121,5 @@ public class AuthApiClient extends RestClient {
         assertThat(response.body()).isNotNull();
 
         return response.body().path("id_token").asText();
-    }
-
-    public String login(String username, String password) {
-        String codeVerifier = generateCodeVerifier();
-        String codeChallenge = generateCodeChallenge(codeVerifier);
-
-        preRequest(codeChallenge);
-        String code = oAuthLogin(username, password);
-
-        return "Bearer " + token(code, codeVerifier);
     }
 }

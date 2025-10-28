@@ -13,9 +13,9 @@ import java.util.UUID;
 import static org.assertj.core.api.SoftAssertions.assertSoftly;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static ru.gallery.utils.DataUtils.DEFAULT_PASSWORD;
-import static ru.gallery.utils.DataUtils.DEFAULT_USERNAME;
 import static ru.gallery.utils.DataUtils.randomArtistName;
 import static ru.gallery.utils.DataUtils.randomText;
+import static ru.gallery.utils.DataUtils.randomUsername;
 
 public class GetArtistTest {
 
@@ -27,29 +27,31 @@ public class GetArtistTest {
 
     @Test
     void getArtistTest() {
-        final String token = authApiClient.login(DEFAULT_USERNAME, DEFAULT_PASSWORD);
+        String username = randomUsername();
+        authApiClient.createUser(username, DEFAULT_PASSWORD);
+        final String token = authApiClient.login(username, DEFAULT_PASSWORD);
         String photo = DataUtils.getImageByPathOrEmpty("img/artists/botticelli.jpg");
-        ArtistJson artistJson = new ArtistJson(
+        ArtistJson expectedArtist = new ArtistJson(
                 null,
                 randomArtistName(),
                 randomText(),
                 photo
         );
 
-        UUID addedArtistId = artistGatewayClient.addArtist(token, artistJson).id();
-        ArtistJson artistJsonResponse = artistGatewayClient.getArtist(addedArtistId.toString());
+        UUID addedArtistId = artistGatewayClient.addArtist(token, expectedArtist).id();
+        ArtistJson actualArtistResponse = artistGatewayClient.getArtist(addedArtistId.toString());
         assertSoftly(softly -> {
-                    assertEquals(artistJson.name(), artistJsonResponse.name());
-                    assertEquals(artistJson.biography(), artistJsonResponse.biography());
-                    assertEquals(artistJson.photo(), artistJsonResponse.photo());
+                    assertEquals(expectedArtist.name(), actualArtistResponse.name());
+                    assertEquals(expectedArtist.biography(), actualArtistResponse.biography());
+                    assertEquals(expectedArtist.photo(), actualArtistResponse.photo());
                 }
         );
 
-        ArtistEntity actualArtist = artistRepository.findArtistById(addedArtistId);
+        ArtistEntity actualArtistDb = artistRepository.findArtistById(addedArtistId);
         assertSoftly(softly -> {
-                    assertEquals(artistJsonResponse.id(), actualArtist.getId());
-                    assertEquals(artistJson.name(), actualArtist.getName());
-                    assertEquals(artistJson.biography(), actualArtist.getBiography());
+                    assertEquals(actualArtistResponse.id(), actualArtistDb.getId());
+                    assertEquals(expectedArtist.name(), actualArtistDb.getName());
+                    assertEquals(expectedArtist.biography(), actualArtistDb.getBiography());
                 }
         );
     }

@@ -1,10 +1,10 @@
-package ru.gallery.test.api;
+package ru.gallery.test.api.artist;
 
 import org.junit.jupiter.api.Test;
 import ru.gallery.data.ArtistRepository;
 import ru.gallery.data.entity.ArtistEntity;
 import ru.gallery.model.ArtistJson;
-import ru.gallery.service.ArtistGatewayRestClient;
+import ru.gallery.service.ArtistGatewayClient;
 import ru.gallery.service.AuthApiClient;
 import ru.gallery.utils.DataUtils;
 
@@ -17,9 +17,9 @@ import static ru.gallery.utils.DataUtils.DEFAULT_USERNAME;
 import static ru.gallery.utils.DataUtils.randomArtistName;
 import static ru.gallery.utils.DataUtils.randomText;
 
-public class UpdateArtistRestTest {
+public class UpdateArtistTest {
 
-    private final ArtistGatewayRestClient artistGatewayRestClient = new ArtistGatewayRestClient();
+    private final ArtistGatewayClient artistGatewayClient = new ArtistGatewayClient();
 
     private final ArtistRepository artistRepository = new ArtistRepository();
 
@@ -34,7 +34,7 @@ public class UpdateArtistRestTest {
                 randomText(),
                 ""
         );
-        UUID addedArtistId = artistGatewayRestClient.addArtist(token, createdArtistJson).id();
+        UUID addedArtistId = artistGatewayClient.addArtist(token, createdArtistJson).id();
 
         String photo = DataUtils.getImageByPathOrEmpty("img/artists/botticelli.jpg");
         ArtistJson updatedArtistJson = new ArtistJson(
@@ -43,7 +43,7 @@ public class UpdateArtistRestTest {
                 randomText(),
                 photo
         );
-        ArtistJson artistJsonResponse = artistGatewayRestClient.updateArtist(token, updatedArtistJson);
+        ArtistJson artistJsonResponse = artistGatewayClient.updateArtist(token, updatedArtistJson);
 
         assertSoftly(softly -> {
                     assertEquals(updatedArtistJson.id(), artistJsonResponse.id());

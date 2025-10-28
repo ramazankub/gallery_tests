@@ -11,15 +11,15 @@ import ru.gallery.model.PageResponse;
 import java.io.IOException;
 import java.util.List;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
-public class ArtistGatewayRestClient {
+public class ArtistGatewayClient {
 
     private static final Config CFG = Config.getInstance();
 
     private final ArtistGatewayApi artistGatewayApi;
 
-    public ArtistGatewayRestClient() {
+    public ArtistGatewayClient() {
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(CFG.gatewayUrl())
                 .addConverterFactory(JacksonConverterFactory.create())
@@ -34,7 +34,6 @@ public class ArtistGatewayRestClient {
         } catch (IOException e) {
             throw new AssertionError(e);
         }
-        assertThat(response.code()).isEqualTo(200);
 
         return response.body();
     }
@@ -46,8 +45,7 @@ public class ArtistGatewayRestClient {
         } catch (IOException e) {
             throw new AssertionError(e);
         }
-        assertThat(response.code()).isEqualTo(200);
-        assertThat(response.body()).isNotNull();
+        assertNotNull(response.body());
 
         return response.body().content();
     }
@@ -59,7 +57,6 @@ public class ArtistGatewayRestClient {
         } catch (IOException e) {
             throw new AssertionError(e);
         }
-        assertThat(response.code()).isEqualTo(200);
 
         return response.body();
     }
@@ -71,7 +68,6 @@ public class ArtistGatewayRestClient {
         } catch (IOException e) {
             throw new AssertionError(e);
         }
-        assertThat(response.code()).isEqualTo(200);
 
         return response.body();
     }

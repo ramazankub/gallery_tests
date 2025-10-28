@@ -1,18 +1,18 @@
-package ru.gallery.test.api;
+package ru.gallery.test.api.artist;
 
 import org.junit.jupiter.api.Test;
 import ru.gallery.data.ArtistRepository;
 import ru.gallery.data.entity.ArtistEntity;
 import ru.gallery.model.ArtistJson;
-import ru.gallery.service.ArtistGatewayRestClient;
+import ru.gallery.service.ArtistGatewayClient;
 
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class GetAllArtistsRestTest {
+public class GetAllArtistTest {
 
-    private final ArtistGatewayRestClient artistGatewayRestClient = new ArtistGatewayRestClient();
+    private final ArtistGatewayClient artistGatewayClient = new ArtistGatewayClient();
 
     private final ArtistRepository artistRepository = new ArtistRepository();
 
@@ -20,7 +20,7 @@ public class GetAllArtistsRestTest {
     void getAllArtistTest() {
         final int defaultArtistCount = 10;
 
-        List<ArtistJson> artistJsonList = artistGatewayRestClient.getAllArtists();
+        List<ArtistJson> artistJsonList = artistGatewayClient.getAllArtists();
 
         List<ArtistEntity> artistEntityList = artistRepository.findAllArtists(defaultArtistCount);
         assertEquals(artistJsonList.size(), artistEntityList.size());

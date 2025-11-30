@@ -10,7 +10,7 @@ import ru.gallery.utils.DataUtils;
 
 import java.util.UUID;
 
-import static org.assertj.core.api.SoftAssertions.assertSoftly;
+import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static ru.gallery.utils.DataUtils.DEFAULT_PASSWORD;
 import static ru.gallery.utils.DataUtils.randomArtistName;
@@ -40,19 +40,18 @@ public class GetArtistTest {
 
         UUID addedArtistId = artistGatewayClient.addArtist(token, expectedArtist).id();
         ArtistJson actualArtistResponse = artistGatewayClient.getArtist(addedArtistId.toString());
-        assertSoftly(softly -> {
-                    assertEquals(expectedArtist.name(), actualArtistResponse.name());
-                    assertEquals(expectedArtist.biography(), actualArtistResponse.biography());
-                    assertEquals(expectedArtist.photo(), actualArtistResponse.photo());
-                }
+
+        assertAll("Проверка полей художника, которого возвращает getArtist",
+                () -> assertEquals(expectedArtist.name(), actualArtistResponse.name()),
+                () -> assertEquals(expectedArtist.biography(), actualArtistResponse.biography()),
+                () -> assertEquals(expectedArtist.photo(), actualArtistResponse.photo())
         );
 
         ArtistEntity actualArtistDb = artistRepository.findArtistById(addedArtistId);
-        assertSoftly(softly -> {
-                    assertEquals(actualArtistResponse.id(), actualArtistDb.getId());
-                    assertEquals(expectedArtist.name(), actualArtistDb.getName());
-                    assertEquals(expectedArtist.biography(), actualArtistDb.getBiography());
-                }
+        assertAll("Проверка полей художника из rococo-artist",
+                () -> assertEquals(actualArtistResponse.id(), actualArtistDb.getId()),
+                () -> assertEquals(expectedArtist.name(), actualArtistDb.getName()),
+                () -> assertEquals(expectedArtist.biography(), actualArtistDb.getBiography())
         );
     }
 }

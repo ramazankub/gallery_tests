@@ -63,8 +63,6 @@ dependencies {
     testImplementation "org.slf4j:slf4j-api:${slf4jVersion}"
     // JUnit
     testImplementation "org.junit.jupiter:junit-jupiter:${junitVersion}"
-    // AssertJ
-    testImplementation "org.assertj:assertj-core:${assertJVersion}"
     // REST
     testImplementation "com.squareup.retrofit2:retrofit:${retrofitVersion}"
     testImplementation "com.squareup.retrofit2:converter-jackson:${retrofitVersion}"
@@ -97,9 +95,7 @@ dependencies {
     testImplementation "com.codeborne:selenide:${selenideVersion}"
     // Utils
     testImplementation "ru.yandex.qatools.ashot:ashot:${ashotVersion}"
-    testImplementation("com.github.javafaker:javafaker:${fakerVersion}") {
-//        exclude group: 'org.yaml'
-    }
+    testImplementation("com.github.javafaker:javafaker:${fakerVersion}")
     testImplementation 'com.google.guava:guava:33.4.8-jre'
     testImplementation 'com.github.vertical-blank:sql-formatter:2.0.5'
     // gRPC

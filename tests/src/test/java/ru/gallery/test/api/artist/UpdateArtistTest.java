@@ -10,7 +10,7 @@ import ru.gallery.utils.DataUtils;
 
 import java.util.UUID;
 
-import static org.assertj.core.api.SoftAssertions.assertSoftly;
+import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static ru.gallery.utils.DataUtils.DEFAULT_PASSWORD;
 import static ru.gallery.utils.DataUtils.randomArtistName;
@@ -47,20 +47,18 @@ public class UpdateArtistTest {
         );
         ArtistJson actualArtistResponse = artistGatewayClient.updateArtist(token, updatedArtist);
 
-        assertSoftly(softly -> {
-                    assertEquals(updatedArtist.id(), actualArtistResponse.id());
-                    assertEquals(updatedArtist.name(), actualArtistResponse.name());
-                    assertEquals(updatedArtist.biography(), actualArtistResponse.biography());
-                    assertEquals(updatedArtist.photo(), actualArtistResponse.photo());
-                }
+        assertAll("Проверка полей художника, которого возвращает updateArtist",
+                () -> assertEquals(updatedArtist.id(), actualArtistResponse.id()),
+                () -> assertEquals(updatedArtist.name(), actualArtistResponse.name()),
+                () -> assertEquals(updatedArtist.biography(), actualArtistResponse.biography()),
+                () -> assertEquals(updatedArtist.photo(), actualArtistResponse.photo())
         );
 
         ArtistEntity actualArtistDb = artistRepository.findArtistById(addedArtistId);
-        assertSoftly(softly -> {
-                    assertEquals(actualArtistResponse.id(), actualArtistDb.getId());
-                    assertEquals(updatedArtist.name(), actualArtistDb.getName());
-                    assertEquals(updatedArtist.biography(), actualArtistDb.getBiography());
-                }
+        assertAll("Проверка полей художника из rococo-artist",
+                () -> assertEquals(actualArtistResponse.id(), actualArtistDb.getId()),
+                () -> assertEquals(updatedArtist.name(), actualArtistDb.getName()),
+                () -> assertEquals(updatedArtist.biography(), actualArtistDb.getBiography())
         );
     }
 }

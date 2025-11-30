@@ -10,7 +10,8 @@ import ru.gallery.api.core.ThreadSafeCookieStore;
 import javax.annotation.Nonnull;
 import java.io.IOException;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static ru.gallery.utils.OAuthUtils.generateCodeChallenge;
 import static ru.gallery.utils.OAuthUtils.generateCodeVerifier;
 
@@ -62,7 +63,7 @@ public class AuthApiClient extends RestClient {
         } catch (IOException e) {
             throw new AssertionError(e);
         }
-        assertThat(response.code()).isEqualTo(200);
+        assertEquals(200, response.code());
     }
 
     private void registerUser(String username, String password, String passwordSubmit, String csrf) {
@@ -72,7 +73,7 @@ public class AuthApiClient extends RestClient {
         } catch (IOException e) {
             throw new AssertionError(e);
         }
-        assertThat(response.code()).isEqualTo(201);
+        assertEquals(201, response.code());
     }
 
     private void preRequest(String codeChallenge) {
@@ -90,7 +91,7 @@ public class AuthApiClient extends RestClient {
         } catch (IOException e) {
             throw new AssertionError(e);
         }
-        assertThat(response.code()).isEqualTo(200);
+        assertEquals(200, response.code());
     }
 
     private String oAuthLogin(String username, String password) {
@@ -103,7 +104,7 @@ public class AuthApiClient extends RestClient {
         } catch (IOException e) {
             throw new AssertionError(e);
         }
-        assertThat(response.code()).isEqualTo(200);
+        assertEquals(200, response.code());
 
         String url = response.raw().request().url().toString();
         return StringUtils.substringAfter(url, "code=");
@@ -117,8 +118,8 @@ public class AuthApiClient extends RestClient {
         } catch (IOException e) {
             throw new AssertionError(e);
         }
-        assertThat(response.code()).isEqualTo(200);
-        assertThat(response.body()).isNotNull();
+        assertEquals(200, response.code());
+        assertNotNull(response.body());
 
         return response.body().path("id_token").asText();
     }

@@ -1,25 +1,31 @@
 package ru.gallery.service;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import okhttp3.OkHttpClient;
 import org.apache.commons.lang3.StringUtils;
 import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.jackson.JacksonConverterFactory;
 import ru.gallery.api.AuthApi;
-import ru.gallery.api.core.RestClient;
 import ru.gallery.api.core.ThreadSafeCookieStore;
+import ru.gallery.config.Config;
 
 import javax.annotation.Nonnull;
 import java.io.IOException;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static ru.gallery.utils.ClientUtils.getOkHttpClient;
 import static ru.gallery.utils.OAuthUtils.generateCodeChallenge;
 import static ru.gallery.utils.OAuthUtils.generateCodeVerifier;
 
-public class AuthApiClient extends RestClient {
+public class AuthApiClient {
 
     private static final String RESPONSE_TYPE = "code";
 
     private static final String SCOPE = "openid";
+
+    private static final Config CFG = Config.getInstance();
 
     private static final String REDIRECT_URI = CFG.frontUrl() + "authorized";
 
@@ -32,7 +38,12 @@ public class AuthApiClient extends RestClient {
     private final AuthApi authApi;
 
     public AuthApiClient() {
-        super(CFG.authUrl(), true);
+        OkHttpClient client = getOkHttpClient(true);
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(CFG.authUrl())
+                .addConverterFactory(JacksonConverterFactory.create())
+                .client(client)
+                .build();
         this.authApi = retrofit.create(AuthApi.class);
     }
 
@@ -49,7 +60,6 @@ public class AuthApiClient extends RestClient {
     public String login(@Nonnull String username, @Nonnull String password) {
         String codeVerifier = generateCodeVerifier();
         String codeChallenge = generateCodeChallenge(codeVerifier);
-
         preRequest(codeChallenge);
         String code = oAuthLogin(username, password);
 

@@ -58,7 +58,7 @@ public class MainPage extends BasePage<MainPage> {
         return this;
     }
 
-    @Step("Клик на кнопку 'Музеи' ")
+    @Step("Клик на кнопку 'Музеи'")
     @Nonnull
     public MuseumPage clickMuseumButton() {
         museumsButton.click();

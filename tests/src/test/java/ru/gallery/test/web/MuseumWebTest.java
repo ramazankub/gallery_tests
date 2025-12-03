@@ -1,6 +1,7 @@
 package ru.gallery.test.web;
 
 import com.codeborne.selenide.Selenide;
+import io.qameta.allure.Description;
 import org.junit.jupiter.api.Test;
 import ru.gallery.config.Config;
 import ru.gallery.page.MainPage;
@@ -15,6 +16,7 @@ public class MuseumWebTest extends BaseTest {
     private static final Config CFG = Config.getInstance();
 
     @Test
+    @Description("Проверка добавление музея")
     void addMuseumShouldBeSuccess() {
         String museumTitle = DataUtils.randomMuseumName();
         String country = DataUtils.defaultCountryName();

@@ -61,11 +61,8 @@ pages:
     - shell-runner
   script:
     - if (-not (Test-Path "tests/build/reports/allure-report")) { Write-Error "allure-report не найден"; exit 1 }
-    #    - mkdir public -Force
-    - mkdir "public/history/${CI_PIPELINE_ID}" -Force
-    #    - Move-Item "tests/build/reports/allure-report/allureReport/*" public/ -Force
-    - Copy-Item "tests/build/reports/allure-report/allureReport/*" "public/history/${CI_PIPELINE_ID}/" -Recurse -Force
-    - Copy-Item "public/history/${CI_PIPELINE_ID}/index.html" "public/index.html" -Force
+      - mkdir public -Force
+      - Move-Item "tests/build/reports/allure-report/allureReport/*" public/ -Force
   artifacts:
     paths:
       - public

@@ -63,6 +63,8 @@ pages:
     - Write-Host "Содержимое tests/build/reports:"
     - dir tests/build/reports/
     - if (-not (Test-Path "tests/build/reports/allure-report")) { Write-Error "allure-report не найден"; exit 1 }
+    - Remove-Item "tests/build/reports/allure-report/history" -Recurse -Force -ErrorAction SilentlyContinue
+    - Remove-Item "tests/build/reports/allure-report/trends" -Recurse -Force -ErrorAction SilentlyContinue
     - mkdir public -Force
     - Move-Item "tests/build/reports/allure-report/allureReport/*" public/ -Force
     - Write-Host "Содержимое public:"

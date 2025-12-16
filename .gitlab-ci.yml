@@ -60,16 +60,12 @@ pages:
   tags:
     - shell-runner
   script:
-    - Write-Host "Содержимое tests/build/reports:"
-    - dir tests/build/reports/
     - if (-not (Test-Path "tests/build/reports/allure-report")) { Write-Error "allure-report не найден"; exit 1 }
-    - Remove-Item "tests/build/reports/allure-report/history" -Recurse -Force -ErrorAction SilentlyContinue
-    - Remove-Item "tests/build/reports/allure-report/trends" -Recurse -Force -ErrorAction SilentlyContinue
-    - mkdir public -Force
-    - Move-Item "tests/build/reports/allure-report/allureReport/*" public/ -Force
-    - Write-Host "Содержимое public:"
-    - dir public/
-    - if (-not (Test-Path "public/index.html")) { Write-Error "В public нет index.html"; exit 1 }
+    #    - mkdir public -Force
+    - mkdir "public/history/${CI_PIPELINE_ID}" -Force
+    #    - Move-Item "tests/build/reports/allure-report/allureReport/*" public/ -Force
+    - Move-Item "tests/build/reports/allure-report/*" "public/history/${CI_PIPELINE_ID}/" -Force
+    - Copy-Item "public/history/${CI_PIPELINE_ID}/index.html" "public/index.html" -Force
   artifacts:
     paths:
       - public

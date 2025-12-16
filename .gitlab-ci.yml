@@ -64,7 +64,7 @@ pages:
     #    - mkdir public -Force
     - mkdir "public/history/${CI_PIPELINE_ID}" -Force
     #    - Move-Item "tests/build/reports/allure-report/allureReport/*" public/ -Force
-    - Move-Item "tests/build/reports/allure-report/*" "public/history/${CI_PIPELINE_ID}/" -Force
+    - Copy-Item "tests/build/reports/allure-report/allureReport/*" "public/history/${CI_PIPELINE_ID}/" -Recurse -Force
     - Copy-Item "public/history/${CI_PIPELINE_ID}/index.html" "public/index.html" -Force
   artifacts:
     paths:

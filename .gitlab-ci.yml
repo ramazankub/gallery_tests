@@ -1,0 +1,75 @@
+stages:
+  - test
+  - report
+
+variables:
+  GRADLE_USER_HOME: "$CI_PROJECT_DIR/.gradle"
+
+cache:
+  key: "${CI_PROJECT_NAME}"
+  paths:
+    - tests/.gradle/wrapper
+    - tests/.gradle/caches
+
+test:
+  stage: test
+  tags:
+    - shell-runner
+  before_script:
+    - git config core.longpaths true
+    - $env:JAVA_HOME = "C:\Users\Dmitry\.jdks\corretto-21.0.4"
+    - $env:PATH = "$env:JAVA_HOME\bin;$env:PATH"
+    - java -version
+    - cd tests
+  script:
+    - echo "Запуск тестов"
+    - .\gradlew.bat clean test --no-daemon
+  artifacts:
+    when: always
+    paths:
+      - tests/build/allure-results
+    expire_in: 1 week
+    reports:
+      junit: tests/build/test-results/test/TEST-*.xml
+
+allure_report:
+  stage: report
+  needs: [ "test" ]
+  tags:
+    - shell-runner
+  before_script:
+    - git config core.longpaths true
+    - $env:JAVA_HOME = "C:\Users\Dmitry\.jdks\corretto-21.0.4"
+    - $env:PATH = "$env:JAVA_HOME\bin;$env:PATH"
+    - java -version
+    - cd tests
+  script:
+    - echo "Генерация отчета"
+    - .\gradlew.bat allureReport --no-daemon
+  artifacts:
+    when: always
+    paths:
+      - tests/build/reports/allure-report/
+    expire_in: 1 week
+
+pages:
+  stage: report
+  needs:
+    - job: allure_report
+      artifacts: true
+  tags:
+    - shell-runner
+  script:
+    - Write-Host "Содержимое tests/build/reports:"
+    - dir tests/build/reports/
+    - if (-not (Test-Path "tests/build/reports/allure-report")) { Write-Error "allure-report не найден"; exit 1 }
+    - mkdir public -Force
+    - Move-Item "tests/build/reports/allure-report/allureReport/*" public/ -Force
+    - Write-Host "Содержимое public:"
+    - dir public/
+    - if (-not (Test-Path "public/index.html")) { Write-Error "В public нет index.html"; exit 1 }
+  artifacts:
+    paths:
+      - public
+  only:
+    - main

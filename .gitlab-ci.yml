@@ -61,8 +61,8 @@ pages:
     - shell-runner
   script:
     - if (-not (Test-Path "tests/build/reports/allure-report")) { Write-Error "allure-report не найден"; exit 1 }
-      - mkdir public -Force
-      - Move-Item "tests/build/reports/allure-report/allureReport/*" public/ -Force
+    - mkdir public -Force
+    - Move-Item "tests/build/reports/allure-report/allureReport/*" public/ -Force
   artifacts:
     paths:
       - public

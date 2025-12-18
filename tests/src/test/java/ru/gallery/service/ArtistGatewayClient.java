@@ -1,5 +1,6 @@
 package ru.gallery.service;
 
+import io.qameta.allure.Step;
 import okhttp3.OkHttpClient;
 import retrofit2.Response;
 import retrofit2.Retrofit;
@@ -31,6 +32,7 @@ public class ArtistGatewayClient {
         this.artistGatewayApi = retrofit.create(ArtistGatewayApi.class);
     }
 
+    @Step("Отправка запроса на получение художника")
     public ArtistJson getArtist(String id) {
         final Response<ArtistJson> response;
         try {
@@ -42,6 +44,7 @@ public class ArtistGatewayClient {
         return response.body();
     }
 
+    @Step("Отправка запроса на получение всех художников")
     public List<ArtistJson> getAllArtists() {
         final Response<PageResponse<ArtistJson>> response;
         try {
@@ -54,6 +57,7 @@ public class ArtistGatewayClient {
         return response.body().content();
     }
 
+    @Step("Отправка запроса на добавление художника")
     public ArtistJson addArtist(String token, ArtistJson artist) {
         final Response<ArtistJson> response;
         try {
@@ -65,6 +69,7 @@ public class ArtistGatewayClient {
         return response.body();
     }
 
+    @Step("Отправка запроса на обновление художника")
     public ArtistJson updateArtist(String token, ArtistJson artist) {
         final Response<ArtistJson> response;
         try {

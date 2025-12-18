@@ -6,6 +6,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.google.gson.JsonSyntaxException;
+import io.qameta.allure.okhttp3.AllureOkHttp3;
 import okhttp3.JavaNetCookieJar;
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
@@ -21,6 +22,7 @@ public class ClientUtils {
         return new OkHttpClient.Builder()
                 .followRedirects(followRedirect)
                 .addNetworkInterceptor(getLoggingInterceptor())
+                .addInterceptor(new AllureOkHttp3().setRequestTemplate("request.ftl").setResponseTemplate("response.ftl"))
                 .cookieJar(
                         new JavaNetCookieJar(
                                 new CookieManager(

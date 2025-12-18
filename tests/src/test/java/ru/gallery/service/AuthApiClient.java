@@ -1,6 +1,7 @@
 package ru.gallery.service;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import io.qameta.allure.Step;
 import okhttp3.OkHttpClient;
 import org.apache.commons.lang3.StringUtils;
 import retrofit2.Response;
@@ -47,6 +48,7 @@ public class AuthApiClient {
         this.authApi = retrofit.create(AuthApi.class);
     }
 
+    @Step("Создание нового пользователя")
     public void createUser(@Nonnull String username, @Nonnull String password) {
         getRegisterPage();
         registerUser(
@@ -57,6 +59,7 @@ public class AuthApiClient {
         );
     }
 
+    @Step("Получение токена пользователя")
     public String login(@Nonnull String username, @Nonnull String password) {
         String codeVerifier = generateCodeVerifier();
         String codeChallenge = generateCodeChallenge(codeVerifier);

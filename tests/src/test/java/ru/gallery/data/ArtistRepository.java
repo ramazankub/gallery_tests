@@ -1,5 +1,6 @@
 package ru.gallery.data;
 
+import io.qameta.allure.Step;
 import jakarta.persistence.EntityManager;
 import ru.gallery.config.Config;
 import ru.gallery.data.entity.ArtistEntity;
@@ -17,6 +18,7 @@ public class ArtistRepository {
     private final EntityManager entityManager = em(CFG.artistJdbcUrl());
 
     @Nonnull
+    @Step("Получить художника из базы по с id = {id}")
     public ArtistEntity findArtistById(UUID id) {
         String sql = "SELECT * FROM artist WHERE id = :id";
 
@@ -28,6 +30,7 @@ public class ArtistRepository {
 
     @Nonnull
     @SuppressWarnings("unchecked")
+    @Step("Получить {count} художников из базы")
     public List<ArtistEntity> findAllArtists(int count) {
         String sql = "SELECT * FROM artist";
 

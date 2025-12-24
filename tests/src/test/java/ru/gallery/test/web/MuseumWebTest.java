@@ -2,6 +2,7 @@ package ru.gallery.test.web;
 
 import com.codeborne.selenide.Selenide;
 import io.qameta.allure.Description;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import ru.gallery.config.Config;
 import ru.gallery.page.MainPage;
@@ -15,6 +16,11 @@ public class MuseumWebTest extends BaseTest {
 
     private static final Config CFG = Config.getInstance();
 
+    @BeforeEach
+    void authUser() {
+        AuthWebUtils.authUser(DEFAULT_USERNAME, DEFAULT_PASSWORD);
+    }
+
     @Test
     @Description("Проверка добавление музея")
     void addMuseumShouldBeSuccess() {
@@ -23,8 +29,6 @@ public class MuseumWebTest extends BaseTest {
         String city = DataUtils.randomCityName();
         String museumImagePath = "img/museums/hermitage.jpg";
         String description = DataUtils.randomText();
-
-        AuthWebUtils.authUser(DEFAULT_USERNAME, DEFAULT_PASSWORD);
 
         Selenide.open(CFG.frontUrl(), MainPage.class)
                 .clickMuseumButton()

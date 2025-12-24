@@ -1,5 +1,6 @@
 package ru.gallery.test.api.artist;
 
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import ru.gallery.data.ArtistRepository;
 import ru.gallery.data.entity.ArtistEntity;
@@ -19,17 +20,23 @@ import static ru.gallery.utils.DataUtils.randomUsername;
 
 public class GetArtistTest {
 
+    private static final AuthApiClient authApiClient = new AuthApiClient();
+
+    private static String token;
+
     private final ArtistGatewayClient artistGatewayClient = new ArtistGatewayClient();
 
     private final ArtistRepository artistRepository = new ArtistRepository();
 
-    private final AuthApiClient authApiClient = new AuthApiClient();
+    @BeforeAll
+    static void createUserAndLogin() {
+        String username = randomUsername();
+        authApiClient.createUser(username, DEFAULT_PASSWORD);
+        token = authApiClient.login(username, DEFAULT_PASSWORD);
+    }
 
     @Test
     void getArtistTest() {
-        String username = randomUsername();
-        authApiClient.createUser(username, DEFAULT_PASSWORD);
-        final String token = authApiClient.login(username, DEFAULT_PASSWORD);
         String photo = DataUtils.getImageByPathOrEmpty("img/artists/botticelli.jpg");
         ArtistJson expectedArtist = new ArtistJson(
                 null,

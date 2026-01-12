@@ -18,7 +18,7 @@ public class HeaderElement {
 
     private static final SelenideElement paintingsButton = $x("//a[contains(text(), 'Картины')]");
 
-    private static final SelenideElement artistsButton = $x("//a[contains(text(), 'Художники}')]");
+    private static final SelenideElement artistsButton = $x("//a[contains(text(), 'Художники')]");
 
     private static final SelenideElement museumsButton = $x("//a[contains(text(), 'Музеи')]");
 

@@ -7,6 +7,7 @@ import org.apache.commons.lang3.StringUtils;
 
 import javax.annotation.Nonnull;
 
+// Сюда не вникай
 public class EntityManagers {
 
     @Nonnull
@@ -14,7 +15,7 @@ public class EntityManagers {
         EntityManagerFactory emf = Persistence.createEntityManagerFactory(
                 StringUtils.substringAfter(jdbcUrl, "37038/")
         );
-        
+
         return emf.createEntityManager();
     }
 }

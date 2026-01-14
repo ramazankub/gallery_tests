@@ -12,6 +12,7 @@ import static com.codeborne.selenide.Selenide.$x;
 
 public class LoginPage extends BasePage<LoginPage> {
 
+    // Такие поля - это селекторы. Они описывают содержимое страницы
     private final SelenideElement mainTitle = $x("//h1");
 
     private final SelenideElement incorrectUserDataError = $x("//p[text() = 'Неверные учетные данные пользователя']");
@@ -30,11 +31,12 @@ public class LoginPage extends BasePage<LoginPage> {
 
     private final SelenideElement registerButton = $x("//a[@href='/register']");
 
+    // Методы - это то, с помощью чего мы можем работать с локаторами
     @Nonnull
     @Step("Проверка элементов на странице 'Логин'")
     public LoginPage checkElements() {
-        mainTitle.shouldHave(text("Rococo"));
-        usernameTitle.shouldBe(visible);
+        mainTitle.shouldHave(text("Rococo")); // mainTitle должен иметь текст "Rococo"
+        usernameTitle.shouldBe(visible); // usernameTitle должен быть видимым
         usernameTitle.shouldBe(visible);
         usernameInput.shouldBe(visible);
         passwordTitle.shouldBe(visible);
@@ -42,6 +44,8 @@ public class LoginPage extends BasePage<LoginPage> {
         enterButton.shouldBe(visible);
         registerButton.shouldBe(visible);
 
+        // Обрати внимание, что мы всегда возвращаем текущий объект с помощью this. В данном случае это LoginPage.
+        // Это нужно для того чтобы в тесте получалась цепочка вызовов
         return this;
     }
 
@@ -55,7 +59,7 @@ public class LoginPage extends BasePage<LoginPage> {
     @Nonnull
     @Step("Ввод имени пользователя")
     public LoginPage setUsername(String username) {
-        usernameInput.setValue(username);
+        usernameInput.setValue(username); // вставляет текст в поле usernameInput
         return this;
     }
 

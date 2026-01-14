@@ -20,10 +20,13 @@ public class ArtistGatewayClient {
 
     private static final Config CFG = Config.getInstance();
 
+    // Это интерфейс, в котором мы описывали методы
     private final ArtistGatewayApi artistGatewayApi;
 
     public ArtistGatewayClient() {
+        // Создаем самописный OkHttpClient для Retrofit. В нем добавлено логирование и украшательства для отчетов
         OkHttpClient client = getOkHttpClient(false);
+        // Создаем объект Retrofit. Через него будем отправлять запросы
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(CFG.gatewayUrl())
                 .addConverterFactory(JacksonConverterFactory.create())

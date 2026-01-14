@@ -11,6 +11,8 @@ import lombok.Setter;
 
 import java.util.UUID;
 
+// Этот класс описывает таблицу. Поля класса - это столбцы в таблице artist.
+// ArtistEntity - один художник, List<ArtistEntity> - список художников
 @Entity
 @Table(name = "artist")
 @Getter

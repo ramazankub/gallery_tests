@@ -1,6 +1,6 @@
 package ru.gallery.test.api.artist;
 
-import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import ru.gallery.data.ArtistRepository;
 import ru.gallery.data.entity.ArtistEntity;
@@ -18,16 +18,17 @@ import static ru.gallery.utils.DataUtils.randomUsername;
 
 public class AddArtistTest {
 
-    private static final AuthApiClient authApiClient = new AuthApiClient();
-
-    private static String token;
+    private final AuthApiClient authApiClient = new AuthApiClient();
 
     private final ArtistGatewayClient artistGatewayClient = new ArtistGatewayClient();
 
     private final ArtistRepository artistRepository = new ArtistRepository();
 
-    @BeforeAll
-    static void createUserAndLogin() {
+    private String token;
+
+    // @BeforeEach запускает блок кода перед каждым тестам. Нужно, чтобы в каждом тесте был новый пользователь
+    @BeforeEach
+    void createUserAndLogin() {
         String username = randomUsername();
         authApiClient.createUser(username, DEFAULT_PASSWORD);
         token = authApiClient.login(username, DEFAULT_PASSWORD);
@@ -35,6 +36,7 @@ public class AddArtistTest {
 
     @Test
     void addArtistTest() {
+        // Создаем художника, чтобы положить его в базу
         String photo = DataUtils.getImageByPathOrEmpty("img/artists/botticelli.jpg");
         ArtistJson expectedArtist = new ArtistJson(
                 null,
@@ -43,16 +45,23 @@ public class AddArtistTest {
                 photo
         );
 
+        // Отправляем запрос на добавление художника, который положит его в базу. И нам возвращается сущность того же художника
         ArtistJson actualArtistResponse = artistGatewayClient.addArtist(token, expectedArtist);
 
+        // Проверяем что вернулось то же самое, что мы и отправляли
+        // assertAll реализует софт ассерты. Чтобы тест не упал при первом несовпадении, а провел все проверки, и
+        // сообщил результат в конце
         assertAll("Проверка полей художника, которого возвращает addArtist",
                 () -> assertEquals(expectedArtist.name(), actualArtistResponse.name()),
                 () -> assertEquals(expectedArtist.biography(), actualArtistResponse.biography()),
                 () -> assertEquals(expectedArtist.photo(), actualArtistResponse.photo())
         );
 
+        // Идем в базу напрямую и достаем добавленного художника
         ArtistEntity actualArtistDb = artistRepository.findArtistById(actualArtistResponse.id());
 
+        // Проверяем что в базе лежит тот же художник что и вернулся в методе
+        // На проверку фото здесь подзабил, но проверять его, конечно, нужно :)
         assertAll("Проверка полей художника из rococo-artist",
                 () -> assertEquals(actualArtistResponse.id(), actualArtistDb.getId()),
                 () -> assertEquals(expectedArtist.name(), actualArtistDb.getName()),

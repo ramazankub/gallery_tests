@@ -10,9 +10,12 @@ import retrofit2.http.Path;
 import ru.gallery.model.ArtistJson;
 import ru.gallery.model.PageResponse;
 
+// В этом классе описываются методы, которые вызываем в автотестах
 public interface ArtistGatewayApi {
 
+    // Тип запроса и путь
     @GET("/api/artist/{id}")
+    // ArtistJson - это body, который мы будем ждать в ответе
     Call<ArtistJson> getArtist(@Path("id") String id);
 
     @GET("/api/artist")

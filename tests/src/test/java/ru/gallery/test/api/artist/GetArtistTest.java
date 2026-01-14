@@ -1,6 +1,6 @@
 package ru.gallery.test.api.artist;
 
-import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import ru.gallery.data.ArtistRepository;
 import ru.gallery.data.entity.ArtistEntity;
@@ -20,16 +20,16 @@ import static ru.gallery.utils.DataUtils.randomUsername;
 
 public class GetArtistTest {
 
-    private static final AuthApiClient authApiClient = new AuthApiClient();
-
-    private static String token;
+    private final AuthApiClient authApiClient = new AuthApiClient();
 
     private final ArtistGatewayClient artistGatewayClient = new ArtistGatewayClient();
 
     private final ArtistRepository artistRepository = new ArtistRepository();
 
-    @BeforeAll
-    static void createUserAndLogin() {
+    private String token;
+
+    @BeforeEach
+    void createUserAndLogin() {
         String username = randomUsername();
         authApiClient.createUser(username, DEFAULT_PASSWORD);
         token = authApiClient.login(username, DEFAULT_PASSWORD);
@@ -45,16 +45,21 @@ public class GetArtistTest {
                 photo
         );
 
+        // Чтобы получить художника, нужно сначала его положить в базу. Кладем, и получаем его id
         UUID addedArtistId = artistGatewayClient.addArtist(token, expectedArtist).id();
+        // Отправляем запрос на получение художника по id
         ArtistJson actualArtistResponse = artistGatewayClient.getArtist(addedArtistId.toString());
 
+        // Проверяем что полученный художник такой же, как и созданный
         assertAll("Проверка полей художника, которого возвращает getArtist",
                 () -> assertEquals(expectedArtist.name(), actualArtistResponse.name()),
                 () -> assertEquals(expectedArtist.biography(), actualArtistResponse.biography()),
                 () -> assertEquals(expectedArtist.photo(), actualArtistResponse.photo())
         );
 
+        // Получаем художника из базы
         ArtistEntity actualArtistDb = artistRepository.findArtistById(addedArtistId);
+        // Проверяем что художник в базе такой же как и в ответе
         assertAll("Проверка полей художника из rococo-artist",
                 () -> assertEquals(actualArtistResponse.id(), actualArtistDb.getId()),
                 () -> assertEquals(expectedArtist.name(), actualArtistDb.getName()),

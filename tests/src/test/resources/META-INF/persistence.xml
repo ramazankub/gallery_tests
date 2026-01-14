@@ -4,6 +4,8 @@
              version="3.0"
              xsi:schemaLocation="https://jakarta.ee/xml/ns/persistence https://jakarta.ee/xml/ns/persistence/persistence_3_0.xsd">
 
+    <!--  Здесь задаются настройки для доступа к базе rococo-artist. Чтобы ходить в другую базу,   -->
+    <!--  нужно скопировать блок persistence-unit и заменить путь до Entity и путь до базы -->
     <persistence-unit name="rococo-artist" transaction-type="RESOURCE_LOCAL">
         <provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
 
@@ -11,13 +13,15 @@
         <class>ru.gallery.data.entity.ArtistEntity</class>
 
         <properties>
-            <!-- JDBC -->
+            <!-- Настройки JDBC -->
             <property name="jakarta.persistence.jdbc.driver" value="org.postgresql.Driver"/>
+            <!-- Путь до базы rococo-artist -->
             <property name="jakarta.persistence.jdbc.url" value="jdbc:postgresql://ru.tuna.am:37038/rococo-artist"/>
+            <!-- Если хочешь глазами посмотреть на базу, например через DBeaver, можешь взять путь выше и логин/пароль отсюда -->
             <property name="jakarta.persistence.jdbc.user" value="postgres"/>
             <property name="jakarta.persistence.jdbc.password" value="secret"/>
 
-            <!-- Hibernate -->
+            <!-- Настройки Hibernate -->
             <property name="hibernate.hbm2ddl.auto" value="none"/>
             <property name="hibernate.dialect" value="org.hibernate.dialect.PostgreSQLDialect"/>
             <property name="hibernate.show_sql" value="true"/>

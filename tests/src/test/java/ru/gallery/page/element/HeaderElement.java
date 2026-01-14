@@ -12,6 +12,7 @@ import static com.codeborne.selenide.Condition.attribute;
 import static com.codeborne.selenide.Condition.visible;
 import static com.codeborne.selenide.Selenide.$x;
 
+// Выделяем в отдельный элемент, т.к. он присутствует почти на всех страницах
 public class HeaderElement {
 
     private static final SelenideElement mainButton = $x("//h1");

@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.util.Base64;
 import java.util.function.Supplier;
 
+// В этом классе лежат методы для генерации данных для тестов. В утилитных классах поля и методы обычно делают статическими
 public class DataUtils {
 
     public static final String DEFAULT_USERNAME = "12345";

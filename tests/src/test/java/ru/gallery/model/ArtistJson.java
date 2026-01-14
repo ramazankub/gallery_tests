@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.util.UUID;
 
+// Этот класс описывает body, которое мы используем в запросах
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public record ArtistJson(
 

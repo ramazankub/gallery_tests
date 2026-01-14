@@ -2,6 +2,7 @@ package ru.gallery.config;
 
 import javax.annotation.Nonnull;
 
+// Здесь мы реализуем методы определенные в Config, и возвращаем уже конкретные пути
 public enum TunaConfig implements Config {
 
     INSTANCE;

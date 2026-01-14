@@ -20,6 +20,7 @@ import static ru.gallery.utils.ClientUtils.getOkHttpClient;
 import static ru.gallery.utils.OAuthUtils.generateCodeChallenge;
 import static ru.gallery.utils.OAuthUtils.generateCodeVerifier;
 
+// Здесь реализована авторизация через OAuth2. Не заморачивайся, просто пользуйся методами отсюда как в примере
 public class AuthApiClient {
 
     private static final String RESPONSE_TYPE = "code";

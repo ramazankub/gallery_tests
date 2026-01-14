@@ -6,6 +6,7 @@ import io.qameta.allure.Step;
 import static com.codeborne.selenide.Condition.text;
 import static com.codeborne.selenide.Selenide.$x;
 
+// Базовая страница для всех страниц. По сути содержит только поля и методы для работы с уведомлениями
 public abstract class BasePage<T extends BasePage<T>> {
 
     private static final String PROFILE_REFRESHED = "Профиль обновлен";

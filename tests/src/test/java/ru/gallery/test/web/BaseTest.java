@@ -11,14 +11,16 @@ public class BaseTest {
 
     private static final String CHROME = "chrome";
 
+    // Перед каждым тестом задаем конфигурации для браузера
     @BeforeEach
     public void setUp() {
-        Configuration.timeout = 30000;
+        Configuration.timeout = 30000; // Глобальный таймаут для неявных ожиданий
         Configuration.pageLoadStrategy = "eager";
         Configuration.browser = CHROME;
         Configuration.browserCapabilities = new ChromeOptions().addArguments("--no-sandbox");
     }
 
+    // После каждого теста закрываем браузер
     @AfterEach
     public void tearDown() {
         if (WebDriverRunner.hasWebDriverStarted()) {

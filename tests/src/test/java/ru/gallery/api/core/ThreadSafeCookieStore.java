@@ -6,6 +6,7 @@ import java.net.HttpCookie;
 import java.net.URI;
 import java.util.List;
 
+// Класс нужен для создания и авторизации пользователя. Вникать в него не нужно
 public enum ThreadSafeCookieStore implements CookieStore {
     INSTANCE;
 

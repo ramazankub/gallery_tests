@@ -14,6 +14,7 @@ import static com.codeborne.selenide.Condition.visible;
 import static com.codeborne.selenide.Selenide.$$x;
 import static com.codeborne.selenide.Selenide.$x;
 
+// Выделяем в отдельный элемент, потому что это окно, которое появляется поверх другой страницы
 public class NewMuseumElement {
 
     private static final SelenideElement element = $x("//div[contains(@class, 'w-modal')]");

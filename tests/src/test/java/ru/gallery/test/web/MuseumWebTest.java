@@ -16,6 +16,8 @@ public class MuseumWebTest extends BaseTest {
 
     private static final Config CFG = Config.getInstance();
 
+    // Авторизуемся перед каждым тестом. По-хорошему нужно создавать нового пользователя и авторизовываться через API,
+    // и прокидывать токен в куки браузера, но для простоты так тоже пойдет
     @BeforeEach
     void authUser() {
         AuthWebUtils.authUser(DEFAULT_USERNAME, DEFAULT_PASSWORD);
@@ -23,16 +25,18 @@ public class MuseumWebTest extends BaseTest {
 
     @Test
     @Description("Проверка добавление музея")
+        // Описание теста для отчета в Allure
     void addMuseumShouldBeSuccess() {
+        // Заранее генерим все данные, которые нам пригодятся
         String museumTitle = DataUtils.randomMuseumName();
         String country = DataUtils.defaultCountryName();
         String city = DataUtils.randomCityName();
         String museumImagePath = "img/museums/hermitage.jpg";
         String description = DataUtils.randomText();
 
-        Selenide.open(CFG.frontUrl(), MainPage.class)
-                .clickMuseumButton()
-                .checkElements()
+        Selenide.open(CFG.frontUrl(), MainPage.class) // MainPage - страница, которая откроется первой
+                .clickMuseumButton() // Кликаем на кнопку "Музеи". Метод возвращает страницу музея MuseumPage
+                .checkElements()// И мы уже можем вызвать метод из MuseumPage, чтобы проверить наличие элементов
                 .clickAddMuseumButton()
                 .setMuseumNameInput(museumTitle)
                 .setCountry(country)

@@ -8,6 +8,7 @@ import retrofit2.http.GET;
 import retrofit2.http.POST;
 import retrofit2.http.Query;
 
+// В этом классе описываются методы, которые нужны для регистрации и авторизации пользователя. Вникать особо не нужно
 public interface AuthApi {
 
     @GET("register")

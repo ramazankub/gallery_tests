@@ -37,23 +37,22 @@ public class UpdateArtistTest {
 
     @Test
     void updateArtistTest() {
-        ArtistJson addedArtist = new ArtistJson(
-                null,
-                randomArtistName(),
-                randomText(),
-                ""
-        );
+        ArtistJson addedArtist = ArtistJson.builder()
+                                           .name(randomArtistName())
+                                           .biography(randomText())
+                                           .photo("")
+                                           .build();
         // Сначала создаем художника
         UUID addedArtistId = artistGatewayClient.addArtist(token, addedArtist).id();
 
         String photo = DataUtils.getImageByPathOrEmpty("img/artists/botticelli.jpg");
         // Готовим нового художника с новыми данными
-        ArtistJson updatedArtist = new ArtistJson(
-                addedArtistId,
-                randomArtistName(),
-                randomText(),
-                photo
-        );
+        ArtistJson updatedArtist = ArtistJson.builder()
+                                             .id(addedArtistId)
+                                             .name(randomArtistName())
+                                             .biography(randomText())
+                                             .photo(photo)
+                                             .build();
         // Обновляем художника
         ArtistJson actualArtistResponse = artistGatewayClient.updateArtist(token, updatedArtist);
 

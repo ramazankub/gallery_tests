@@ -38,12 +38,11 @@ public class GetArtistTest {
     @Test
     void getArtistTest() {
         String photo = DataUtils.getImageByPathOrEmpty("img/artists/botticelli.jpg");
-        ArtistJson expectedArtist = new ArtistJson(
-                null,
-                randomArtistName(),
-                randomText(),
-                photo
-        );
+        ArtistJson expectedArtist = ArtistJson.builder()
+                                              .name(randomArtistName())
+                                              .biography(randomText())
+                                              .photo(photo)
+                                              .build();
 
         // Чтобы получить художника, нужно сначала его положить в базу. Кладем, и получаем его id
         UUID addedArtistId = artistGatewayClient.addArtist(token, expectedArtist).id();

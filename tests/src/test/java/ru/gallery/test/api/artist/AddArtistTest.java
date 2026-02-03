@@ -38,12 +38,12 @@ public class AddArtistTest {
     void addArtistTest() {
         // Создаем художника, чтобы положить его в базу
         String photo = DataUtils.getImageByPathOrEmpty("img/artists/botticelli.jpg");
-        ArtistJson expectedArtist = new ArtistJson(
-                null,
-                randomArtistName(),
-                randomText(),
-                photo
-        );
+
+        ArtistJson expectedArtist = ArtistJson.builder()
+                                              .name(randomArtistName())
+                                              .biography(randomText())
+                                              .photo(photo)
+                                              .build();
 
         // Отправляем запрос на добавление художника, который положит его в базу. И нам возвращается сущность того же художника
         ArtistJson actualArtistResponse = artistGatewayClient.addArtist(token, expectedArtist);

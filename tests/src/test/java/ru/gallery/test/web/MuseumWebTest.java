@@ -24,7 +24,7 @@ public class MuseumWebTest extends BaseTest {
     }
 
     @Test
-    @Description("Проверка добавление музея")
+    @Description("Проверка добавления музея")
         // Описание теста для отчета в Allure
     void addMuseumShouldBeSuccess() {
         // Заранее генерим все данные, которые нам пригодятся

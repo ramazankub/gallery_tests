@@ -8,6 +8,7 @@ import ru.gallery.service.ArtistGatewayClient;
 
 import java.util.List;
 
+import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class GetAllArtistTest {
@@ -26,7 +27,21 @@ public class GetAllArtistTest {
 
         //Идем в базу, и получаем 10 первых художников
         List<ArtistEntity> artistEntityList = artistRepository.findAllArtists(defaultArtistCount);
-        // В идеале проверять все поля всех художников, но здесь проверяем только размер
         assertEquals(artistJsonList.size(), artistEntityList.size());
+
+        for (ArtistJson actualArtist : artistJsonList) {
+            ArtistEntity expectedArtist = artistEntityList.stream()
+                                                          .filter(artist -> artist.getId().equals(actualArtist.id()))
+                                                          .findFirst()
+                                                          .orElseThrow(() -> new AssertionError(
+                                                                  "Художник c id " + actualArtist.id() + " отсутствует в базе")
+                                                          );
+
+            assertAll("Проверка полей художника",
+                    () -> assertEquals(actualArtist.id(), expectedArtist.getId()),
+                    () -> assertEquals(actualArtist.name(), expectedArtist.getName()),
+                    () -> assertEquals(actualArtist.biography(), expectedArtist.getBiography())
+            );
+        }
     }
 }

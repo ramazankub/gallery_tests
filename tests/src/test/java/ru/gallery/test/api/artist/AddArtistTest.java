@@ -1,16 +1,24 @@
 package ru.gallery.test.api.artist;
 
+import okhttp3.ResponseBody;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import retrofit2.Response;
 import ru.gallery.data.ArtistRepository;
 import ru.gallery.data.entity.ArtistEntity;
+import ru.gallery.model.ApiVersion;
 import ru.gallery.model.ArtistJson;
+import ru.gallery.model.ErrorBodyJson;
 import ru.gallery.service.ArtistGatewayClient;
 import ru.gallery.service.AuthApiClient;
 import ru.gallery.utils.DataUtils;
+import ru.gallery.utils.JsonUtils;
 
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static ru.gallery.utils.DataUtils.DEFAULT_PASSWORD;
 import static ru.gallery.utils.DataUtils.randomArtistName;
 import static ru.gallery.utils.DataUtils.randomText;
@@ -38,7 +46,6 @@ public class AddArtistTest {
     void addArtistTest() {
         // Создаем художника, чтобы положить его в базу
         String photo = DataUtils.getImageByPathOrEmpty("img/artists/botticelli.jpg");
-
         ArtistJson expectedArtist = ArtistJson.builder()
                                               .name(randomArtistName())
                                               .biography(randomText())
@@ -46,7 +53,13 @@ public class AddArtistTest {
                                               .build();
 
         // Отправляем запрос на добавление художника, который положит его в базу. И нам возвращается сущность того же художника
-        ArtistJson actualArtistResponse = artistGatewayClient.addArtist(token, expectedArtist);
+        Response<ResponseBody> response = artistGatewayClient.addArtist(token, expectedArtist);
+        // Проверяем, что запрос успешный
+        assertTrue(response.isSuccessful());
+        // Проверяем что тело ответа не null
+        assertNotNull(response.body());
+        // Преобразуем response.body() в ArtistJson
+        ArtistJson actualArtistResponse = JsonUtils.readBody(response.body(), ArtistJson.class);
 
         // Проверяем что вернулось то же самое, что мы и отправляли
         // assertAll реализует софт ассерты. Чтобы тест не упал при первом несовпадении, а провел все проверки, и
@@ -66,6 +79,46 @@ public class AddArtistTest {
                 () -> assertEquals(actualArtistResponse.id(), actualArtistDb.getId()),
                 () -> assertEquals(expectedArtist.name(), actualArtistDb.getName()),
                 () -> assertEquals(expectedArtist.biography(), actualArtistDb.getBiography())
+        );
+    }
+
+    @Test
+    void addArtistTestWithoutName() {
+        String photo = DataUtils.getImageByPathOrEmpty("img/artists/botticelli.jpg");
+        ArtistJson expectedArtist = ArtistJson.builder()
+                                              .biography(randomText()) // Биографию и фото тоже задаем, так как они обязательны
+                                              .photo(photo)
+                                              .build();
+
+        Response<ResponseBody> response = artistGatewayClient.addArtist(token, expectedArtist);
+        assertFalse(response.isSuccessful());
+        assertNotNull(response.errorBody());
+        ErrorBodyJson errorBodyJson = JsonUtils.readBody(response.errorBody(), ErrorBodyJson.class);
+
+        assertAll("Проверка ответа c ошибкой",
+                () -> assertEquals(ApiVersion.V1.toString(), errorBodyJson.apiVersion()),
+                () -> assertEquals("400", errorBodyJson.error().code()),
+                () -> assertEquals("Name cannot be blank", errorBodyJson.error().message())
+        );
+    }
+
+    @Test
+    void addArtistTestWithoutBiography() {
+        String photo = DataUtils.getImageByPathOrEmpty("img/artists/botticelli.jpg");
+        ArtistJson expectedArtist = ArtistJson.builder()
+                                              .name(randomArtistName())
+                                              .photo(photo)
+                                              .build();
+
+        Response<ResponseBody> response = artistGatewayClient.addArtist(token, expectedArtist);
+        assertFalse(response.isSuccessful());
+        assertNotNull(response.errorBody());
+        ErrorBodyJson errorBodyJson = JsonUtils.readBody(response.errorBody(), ErrorBodyJson.class);
+
+        assertAll("Проверка ответа c ошибкой",
+                () -> assertEquals(ApiVersion.V1.toString(), errorBodyJson.apiVersion()),
+                () -> assertEquals("400", errorBodyJson.error().code()),
+                () -> assertEquals("Biography cannot be blank", errorBodyJson.error().message())
         );
     }
 }

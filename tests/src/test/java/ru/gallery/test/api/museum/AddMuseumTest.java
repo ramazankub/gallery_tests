@@ -19,8 +19,8 @@ public class AddMuseumTest {
     }
 
     @Test
-    @Description("Проверка ошибки при добавлении музея без имени")
-    void addMuseumWithoutName() {
+    @Description("Проверка ошибки при добавлении музея без названия")
+    void addMuseumWithoutTitle() {
     }
 
     @Test

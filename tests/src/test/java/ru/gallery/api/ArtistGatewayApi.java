@@ -1,5 +1,6 @@
 package ru.gallery.api;
 
+import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.GET;
@@ -16,16 +17,16 @@ public interface ArtistGatewayApi {
     // Тип запроса и путь
     @GET("/api/artist/{id}")
     // ArtistJson - это body, который мы будем ждать в ответе
-    Call<ArtistJson> getArtist(@Path("id") String id);
+    Call<ResponseBody> getArtist(@Path("id") String id);
 
     @GET("/api/artist")
     Call<PageResponse<ArtistJson>> getAllArtists();
 
     @POST("/api/artist")
-    Call<ArtistJson> addArtist(@Header("Authorization") String bearerToken,
-                               @Body ArtistJson artist);
+    Call<ResponseBody> addArtist(@Header("Authorization") String bearerToken,
+                                 @Body ArtistJson artist);
 
     @PATCH("/api/artist")
-    Call<ArtistJson> updateArtist(@Header("Authorization") String bearerToken,
-                                  @Body ArtistJson artist);
+    Call<ResponseBody> updateArtist(@Header("Authorization") String bearerToken,
+                                    @Body ArtistJson artist);
 }

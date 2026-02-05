@@ -7,7 +7,7 @@ import java.util.Base64;
 
 public class OAuthUtils {
 
-    private static SecureRandom secureRandom = new SecureRandom();
+    private static final SecureRandom secureRandom = new SecureRandom();
 
     public static String generateCodeVerifier() {
         byte[] bytes = new byte[32];

@@ -1,0 +1,17 @@
+package ru.gallery.model;
+
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.Builder;
+
+@JsonInclude(JsonInclude.Include.NON_NULL)
+@Builder
+public record ErrorBodyJson(
+
+        @JsonProperty("apiVersion")
+        String apiVersion,
+
+        @JsonProperty("error")
+        ErrorJson error
+) {
+}

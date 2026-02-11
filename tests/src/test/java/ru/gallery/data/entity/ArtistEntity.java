@@ -29,6 +29,6 @@ public class ArtistEntity {
     @Column
     private String biography;
 
-    @Column
-    private String photo;
+    @Column(columnDefinition = "bytea")
+    private byte[] photo;
 }

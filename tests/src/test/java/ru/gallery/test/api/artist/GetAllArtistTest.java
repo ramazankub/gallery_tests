@@ -5,6 +5,7 @@ import ru.gallery.data.ArtistRepository;
 import ru.gallery.data.entity.ArtistEntity;
 import ru.gallery.model.ArtistJson;
 import ru.gallery.service.ArtistGatewayClient;
+import ru.gallery.utils.StringUtils;
 
 import java.util.List;
 
@@ -40,7 +41,9 @@ public class GetAllArtistTest {
             assertAll("Проверка полей художника",
                     () -> assertEquals(actualArtist.id(), expectedArtist.getId()),
                     () -> assertEquals(actualArtist.name(), expectedArtist.getName()),
-                    () -> assertEquals(actualArtist.biography(), expectedArtist.getBiography())
+                    () -> assertEquals(actualArtist.biography(), expectedArtist.getBiography()),
+                    () -> assertEquals(actualArtist.photo(), StringUtils.fromUtf8(expectedArtist.getPhoto()))
+
             );
         }
     }

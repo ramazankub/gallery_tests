@@ -11,6 +11,7 @@ import ru.gallery.service.ArtistGatewayClient;
 import ru.gallery.service.AuthApiClient;
 import ru.gallery.utils.DataUtils;
 import ru.gallery.utils.JsonUtils;
+import ru.gallery.utils.StringUtils;
 
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -71,7 +72,8 @@ public class GetArtistTest {
         assertAll("Проверка полей художника из rococo-artist",
                 () -> assertEquals(actualArtistResponse.id(), actualArtistDb.getId()),
                 () -> assertEquals(expectedArtist.name(), actualArtistDb.getName()),
-                () -> assertEquals(expectedArtist.biography(), actualArtistDb.getBiography())
+                () -> assertEquals(expectedArtist.biography(), actualArtistDb.getBiography()),
+                () -> assertEquals(expectedArtist.photo(), StringUtils.fromUtf8(actualArtistDb.getPhoto()))
         );
     }
 }

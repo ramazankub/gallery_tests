@@ -1,18 +1,13 @@
 package ru.gallery.test.web;
 
 import io.qameta.allure.Description;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 import ru.gallery.config.Config;
-import ru.gallery.utils.AuthWebUtils;
 import ru.gallery.utils.DataUtils;
 
 import java.util.stream.Stream;
-
-import static ru.gallery.utils.DataUtils.DEFAULT_PASSWORD;
-import static ru.gallery.utils.DataUtils.DEFAULT_USERNAME;
 
 public class RegistrationWebTest extends BaseTest {
 
@@ -31,11 +26,6 @@ public class RegistrationWebTest extends BaseTest {
 
     static Stream<String> shouldBeErrorWhenIncorrectPasswordAndRepeatPassword() {
         return Stream.of();
-    }
-
-    @BeforeEach
-    void authUser() {
-        AuthWebUtils.authUser(DEFAULT_USERNAME, DEFAULT_PASSWORD);
     }
 
     @ParameterizedTest
@@ -61,7 +51,7 @@ public class RegistrationWebTest extends BaseTest {
 
     @ParameterizedTest // Проверяем граничные значения снизу и сверху
     @MethodSource()
-    @Description("Проверка ошибки при регистрации нового пользователя с некорректным именем")
+    @Description("Проверка ошибки при регистрации нового пользователя с некорректным паролем")
     void shouldBeErrorWhenIncorrectPasswordAndRepeatPassword(String password) {
         // Твой код
     }

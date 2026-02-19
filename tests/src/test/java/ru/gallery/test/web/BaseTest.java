@@ -14,7 +14,7 @@ public class BaseTest {
     // Перед каждым тестом задаем конфигурации для браузера
     @BeforeEach
     public void setUp() {
-        Configuration.timeout = 30000; // Глобальный таймаут для неявных ожиданий
+        Configuration.timeout = 30000; // Глобальнй таймаут для неявных ожиданий
         Configuration.pageLoadStrategy = "eager";
         Configuration.browser = CHROME;
         Configuration.browserCapabilities = new ChromeOptions().addArguments("--no-sandbox");

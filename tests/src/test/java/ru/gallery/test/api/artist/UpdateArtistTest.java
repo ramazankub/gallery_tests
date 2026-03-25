@@ -1,22 +1,17 @@
 package ru.gallery.test.api.artist;
 
-import okhttp3.ResponseBody;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import retrofit2.Response;
 import ru.gallery.data.ArtistRepository;
 import ru.gallery.data.entity.ArtistEntity;
 import ru.gallery.model.ArtistJson;
 import ru.gallery.service.ArtistGatewayClient;
 import ru.gallery.service.AuthApiClient;
 import ru.gallery.utils.DataUtils;
-import ru.gallery.utils.JsonUtils;
 import ru.gallery.utils.StringUtils;
 
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 import static ru.gallery.utils.DataUtils.DEFAULT_PASSWORD;
 import static ru.gallery.utils.DataUtils.randomArtistName;
 import static ru.gallery.utils.DataUtils.randomText;
@@ -47,16 +42,18 @@ public class UpdateArtistTest {
                                            .photo("")
                                            .build();
         // Сначала создаем художника
-        Response<ResponseBody> addArtistResponse = artistGatewayClient.addArtist(token, addedArtist);
-        assertTrue(addArtistResponse.isSuccessful());
-        assertNotNull(addArtistResponse.body());
-        ArtistJson addedArtistFromResponse = JsonUtils.readBody(addArtistResponse.body(), ArtistJson.class);
+        ArtistJson addedArtistFromResponse = artistGatewayClient.addArtist(token, addedArtist)
+                                                                .then()
+                                                                .statusCode(200)
+                                                                .extract()
+                                                                .as(ArtistJson.class);
 
         // Отправляем запрос на получение художника по id
-        Response<ResponseBody> getArtistResponse = artistGatewayClient.getArtist(addedArtistFromResponse.id().toString());
-        assertTrue(getArtistResponse.isSuccessful());
-        assertNotNull(getArtistResponse.body());
-        ArtistJson updatedArtistFromResponse = JsonUtils.readBody(getArtistResponse.body(), ArtistJson.class);
+        ArtistJson updatedArtistFromResponse = artistGatewayClient.getArtist(addedArtistFromResponse.id().toString())
+                                                                  .then()
+                                                                  .statusCode(200)
+                                                                  .extract()
+                                                                  .as(ArtistJson.class);
 
         String photo = DataUtils.getImageByPathOrEmpty("img/artists/botticelli.jpg");
         // Готовим нового художника с новыми данными
@@ -67,10 +64,11 @@ public class UpdateArtistTest {
                                              .photo(photo)
                                              .build();
         // Обновляем художника
-        Response<ResponseBody> response = artistGatewayClient.updateArtist(token, updatedArtist);
-        assertTrue(response.isSuccessful());
-        assertNotNull(response.body());
-        ArtistJson actualArtistResponse = JsonUtils.readBody(response.body(), ArtistJson.class);
+        ArtistJson actualArtistResponse = artistGatewayClient.updateArtist(token, updatedArtist)
+                                                             .then()
+                                                             .statusCode(200)
+                                                             .extract()
+                                                             .as(ArtistJson.class);
 
         // Проверяем что в ответе художник уже обновленный
         assertAll("Проверка полей художника, которого возвращает updateArtist",

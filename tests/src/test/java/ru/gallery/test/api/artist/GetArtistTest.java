@@ -1,22 +1,17 @@
 package ru.gallery.test.api.artist;
 
-import okhttp3.ResponseBody;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import retrofit2.Response;
 import ru.gallery.data.ArtistRepository;
 import ru.gallery.data.entity.ArtistEntity;
 import ru.gallery.model.ArtistJson;
 import ru.gallery.service.ArtistGatewayClient;
 import ru.gallery.service.AuthApiClient;
 import ru.gallery.utils.DataUtils;
-import ru.gallery.utils.JsonUtils;
 import ru.gallery.utils.StringUtils;
 
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 import static ru.gallery.utils.DataUtils.DEFAULT_PASSWORD;
 import static ru.gallery.utils.DataUtils.randomArtistName;
 import static ru.gallery.utils.DataUtils.randomText;
@@ -49,15 +44,18 @@ public class GetArtistTest {
                                               .build();
 
         // Чтобы получить художника, нужно сначала положить его в базу
-        Response<ResponseBody> addArtistResponse = artistGatewayClient.addArtist(token, expectedArtist);
-        assertTrue(addArtistResponse.isSuccessful());
-        assertNotNull(addArtistResponse.body());
-        ArtistJson addedArtist = JsonUtils.readBody(addArtistResponse.body(), ArtistJson.class);
+        ArtistJson addedArtist = artistGatewayClient.addArtist(token, expectedArtist)
+                                                    .then()
+                                                    .statusCode(200)
+                                                    .extract()
+                                                    .as(ArtistJson.class);
+
         // Отправляем запрос на получение художника по id
-        Response<ResponseBody> getArtistReponseResponse = artistGatewayClient.getArtist(addedArtist.id().toString());
-        assertTrue(getArtistReponseResponse.isSuccessful());
-        assertNotNull(getArtistReponseResponse.body());
-        ArtistJson actualArtistResponse = JsonUtils.readBody(getArtistReponseResponse.body(), ArtistJson.class);
+        ArtistJson actualArtistResponse = artistGatewayClient.getArtist(addedArtist.id().toString())
+                                                             .then()
+                                                             .statusCode(200)
+                                                             .extract()
+                                                             .as(ArtistJson.class);
 
         // Проверяем что полученный художник такой же, как и созданный
         assertAll("Проверка полей художника, которого возвращает getArtist",

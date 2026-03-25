@@ -1,29 +1,35 @@
-package ru.gallery.test.api.artist;
+package ru.gallery.test.api.artist.retrofit;
 
+import okhttp3.ResponseBody;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import retrofit2.Response;
 import ru.gallery.data.ArtistRepository;
 import ru.gallery.data.entity.ArtistEntity;
 import ru.gallery.model.ApiVersion;
 import ru.gallery.model.ArtistJson;
 import ru.gallery.model.ErrorBodyJson;
-import ru.gallery.service.ArtistGatewayClient;
+import ru.gallery.service.ArtistGatewayRetrofitClient;
 import ru.gallery.service.AuthApiClient;
 import ru.gallery.utils.DataUtils;
+import ru.gallery.utils.JsonUtils;
 import ru.gallery.utils.StringUtils;
 
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static ru.gallery.utils.DataUtils.DEFAULT_PASSWORD;
 import static ru.gallery.utils.DataUtils.randomArtistName;
 import static ru.gallery.utils.DataUtils.randomText;
 import static ru.gallery.utils.DataUtils.randomUsername;
 
-public class AddArtistTest {
+public class AddArtistRetrofitTest {
 
     private final AuthApiClient authApiClient = new AuthApiClient();
 
-    private final ArtistGatewayClient artistGatewayClient = new ArtistGatewayClient();
+    private final ArtistGatewayRetrofitClient artistGatewayRetrofitClient = new ArtistGatewayRetrofitClient();
 
     private final ArtistRepository artistRepository = new ArtistRepository();
 
@@ -37,6 +43,9 @@ public class AddArtistTest {
         token = authApiClient.login(username, DEFAULT_PASSWORD);
     }
 
+    // !!!!!!!
+    // Это пример теста с использованием библиотеки Retrofit вместо Rest Assured. Внутри теста разница в строках 60-66
+    // !!!!!!!
     @Test
     void addArtistTest() {
         // Создаем художника, чтобы положить его в базу
@@ -48,11 +57,13 @@ public class AddArtistTest {
                                               .build();
 
         // Отправляем запрос на добавление художника, который положит его в базу. И нам возвращается сущность того же художника
-        ArtistJson actualArtistResponse = artistGatewayClient.addArtist(token, expectedArtist)
-                                                             .then()
-                                                             .statusCode(200)
-                                                             .extract()
-                                                             .as(ArtistJson.class);
+        Response<ResponseBody> response = artistGatewayRetrofitClient.addArtist(token, expectedArtist);
+        // Проверяем, что запрос успешный
+        assertTrue(response.isSuccessful());
+        // Проверяем что тело ответа не null
+        assertNotNull(response.body());
+        // Преобразуем response.body() в ArtistJson
+        ArtistJson actualArtistResponse = JsonUtils.readBody(response.body(), ArtistJson.class);
 
         // Проверяем что вернулось то же самое, что мы и отправляли
         // assertAll реализует софт ассерты. Чтобы тест не упал при первом несовпадении, а провел все проверки, и
@@ -67,6 +78,7 @@ public class AddArtistTest {
         ArtistEntity actualArtistDb = artistRepository.findArtistById(actualArtistResponse.id());
 
         // Проверяем что в базе лежит тот же художник что и вернулся в методе
+        // На проверку фото здесь подзабил, но проверять его, конечно, нужно :)
         assertAll("Проверка полей художника из rococo-artist",
                 () -> assertEquals(actualArtistResponse.id(), actualArtistDb.getId()),
                 () -> assertEquals(expectedArtist.name(), actualArtistDb.getName()),
@@ -83,11 +95,10 @@ public class AddArtistTest {
                                               .photo(photo)
                                               .build();
 
-        ErrorBodyJson errorBodyJson = artistGatewayClient.addArtist(token, expectedArtist)
-                                                         .then()
-                                                         .statusCode(400)
-                                                         .extract()
-                                                         .as(ErrorBodyJson.class);
+        Response<ResponseBody> response = artistGatewayRetrofitClient.addArtist(token, expectedArtist);
+        assertFalse(response.isSuccessful());
+        assertNotNull(response.errorBody());
+        ErrorBodyJson errorBodyJson = JsonUtils.readBody(response.errorBody(), ErrorBodyJson.class);
 
         assertAll("Проверка ответа c ошибкой",
                 () -> assertEquals(ApiVersion.V1.toString(), errorBodyJson.apiVersion()),
@@ -104,11 +115,10 @@ public class AddArtistTest {
                                               .photo(photo)
                                               .build();
 
-        ErrorBodyJson errorBodyJson = artistGatewayClient.addArtist(token, expectedArtist)
-                                                         .then()
-                                                         .statusCode(400)
-                                                         .extract()
-                                                         .as(ErrorBodyJson.class);
+        Response<ResponseBody> response = artistGatewayRetrofitClient.addArtist(token, expectedArtist);
+        assertFalse(response.isSuccessful());
+        assertNotNull(response.errorBody());
+        ErrorBodyJson errorBodyJson = JsonUtils.readBody(response.errorBody(), ErrorBodyJson.class);
 
         assertAll("Проверка ответа c ошибкой",
                 () -> assertEquals(ApiVersion.V1.toString(), errorBodyJson.apiVersion()),

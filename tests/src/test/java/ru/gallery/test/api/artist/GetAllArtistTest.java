@@ -1,9 +1,11 @@
 package ru.gallery.test.api.artist;
 
+import io.restassured.common.mapper.TypeRef;
 import org.junit.jupiter.api.Test;
 import ru.gallery.data.ArtistRepository;
 import ru.gallery.data.entity.ArtistEntity;
 import ru.gallery.model.ArtistJson;
+import ru.gallery.model.PageResponse;
 import ru.gallery.service.ArtistGatewayClient;
 import ru.gallery.utils.StringUtils;
 
@@ -24,7 +26,12 @@ public class GetAllArtistTest {
         final int defaultArtistCount = 10;
 
         // Отправляем запрос, получаем список первых 10 художников (значение по умолчанию)
-        List<ArtistJson> artistJsonList = artistGatewayClient.getAllArtists();
+        List<ArtistJson> artistJsonList = artistGatewayClient.getAllArtists()
+                                                             .then()
+                                                             .statusCode(200)
+                                                             .extract()
+                                                             .as(new TypeRef<PageResponse<ArtistJson>>() {})
+                                                             .content();
 
         //Идем в базу, и получаем 10 первых художников
         List<ArtistEntity> artistEntityList = artistRepository.findAllArtists(defaultArtistCount);

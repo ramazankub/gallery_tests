@@ -5,6 +5,7 @@ buildscript {
         assertJVersion = '3.26.3'
         allureVersion = '2.29.0'
         selenideVersion = '7.4.2'
+        restAssured = '5.5.6'
         retrofitVersion = '2.11.0'
         okhttp3Version = '4.11.0'
         slf4jVersion = '2.0.9'
@@ -66,6 +67,7 @@ dependencies {
     testImplementation "com.squareup.retrofit2:retrofit:${retrofitVersion}"
     testImplementation "com.squareup.retrofit2:converter-jackson:${retrofitVersion}"
     testImplementation "com.squareup.retrofit2:converter-scalars:${retrofitVersion}"
+    testImplementation("io.rest-assured:rest-assured:${restAssured}")
     testImplementation "com.squareup.okhttp3:okhttp:${okhttp3Version}"
     testImplementation "com.squareup.okhttp3:logging-interceptor:${okhttp3Version}"
     testImplementation "com.squareup.okhttp3:okhttp-urlconnection:${okhttp3Version}"

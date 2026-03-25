@@ -1,79 +1,39 @@
 package ru.gallery.service;
 
 import io.qameta.allure.Step;
-import okhttp3.OkHttpClient;
-import okhttp3.ResponseBody;
-import retrofit2.Response;
-import retrofit2.Retrofit;
-import retrofit2.converter.jackson.JacksonConverterFactory;
-import ru.gallery.api.ArtistGatewayApi;
-import ru.gallery.config.Config;
+import io.restassured.response.Response;
 import ru.gallery.model.ArtistJson;
-import ru.gallery.model.PageResponse;
 
-import java.io.IOException;
-import java.util.List;
+public class ArtistGatewayClient extends RestAssuredBaseClient {
 
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static ru.gallery.utils.ClientUtils.getOkHttpClient;
-
-public class ArtistGatewayClient {
-
-    private static final Config CFG = Config.getInstance();
-
-    // Это интерфейс, в котором мы описывали методы
-    private final ArtistGatewayApi artistGatewayApi;
-
-    public ArtistGatewayClient() {
-        // Создаем самописный OkHttpClient для Retrofit. В нем добавлено логирование и украшательства для отчетов
-        OkHttpClient client = getOkHttpClient(false);
-        // Создаем объект Retrofit. Через него будем отправлять запросы
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(CFG.gatewayUrl())
-                .addConverterFactory(JacksonConverterFactory.create())
-                .client(client)
-                .build();
-        this.artistGatewayApi = retrofit.create(ArtistGatewayApi.class);
-    }
+    private final String path = "/api/artist";
 
     @Step("Отправка запроса на получение художника")
-    public Response<ResponseBody> getArtist(String id) {
-        try {
-            return artistGatewayApi.getArtist(id).execute();
-        } catch (IOException e) {
-            throw new AssertionError(e);
-        }
+    public Response getArtist(String id) {
+        return spec.when()
+                   .get(path + "/{id}", id);
     }
 
     @Step("Отправка запроса на получение всех художников")
-    public List<ArtistJson> getAllArtists() {
-        final Response<PageResponse<ArtistJson>> response;
-        try {
-            response = artistGatewayApi.getAllArtists().execute();
-        } catch (IOException e) {
-            throw new AssertionError(e);
-        }
-        assertNotNull(response.body());
-
-        return response.body().content();
+    public Response getAllArtists() {
+        return spec.when()
+                   .get(path);
     }
 
     @Step("Отправка запроса на добавление художника")
-    public Response<ResponseBody> addArtist(String token, ArtistJson artist) {
-        try {
-            return artistGatewayApi.addArtist(token, artist).execute();
-        } catch (IOException e) {
-            throw new AssertionError(e);
-        }
+    public Response addArtist(String token, ArtistJson artist) {
+        return spec.header(AUTH_HEADER, token)
+                   .body(artist)
+                   .when()
+                   .post(path);
+
     }
 
     @Step("Отправка запроса на обновление художника")
-    public Response<ResponseBody> updateArtist(String token, ArtistJson artist) {
-        final Response<ArtistJson> response;
-        try {
-            return artistGatewayApi.updateArtist(token, artist).execute();
-        } catch (IOException e) {
-            throw new AssertionError(e);
-        }
+    public Response updateArtist(String token, ArtistJson artist) {
+        return spec.header(AUTH_HEADER, token)
+                   .body(artist)
+                   .when()
+                   .patch(path);
     }
 }

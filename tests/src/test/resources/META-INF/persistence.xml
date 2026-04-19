@@ -29,4 +29,50 @@
             <property name="hibernate.jdbc.time_zone" value="UTC"/>
         </properties>
     </persistence-unit>
+
+    <!-- Скопировано по инструкции выше -->
+    <persistence-unit name="rococo-geo" transaction-type="RESOURCE_LOCAL">
+        <provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
+
+        <!-- Путь до Enity -->
+        <class>ru.gallery.data.entity.CountryEntity</class>
+
+        <properties>
+            <!-- Настройки JDBC -->
+            <property name="jakarta.persistence.jdbc.driver" value="org.postgresql.Driver"/>
+            <!-- Путь до базы rococo-geo -->
+            <property name="jakarta.persistence.jdbc.url" value="jdbc:postgresql://ru.tuna.am:37038/rococo-geo"/>
+            <property name="jakarta.persistence.jdbc.user" value="postgres"/>
+            <property name="jakarta.persistence.jdbc.password" value="secret"/>
+
+            <!-- Настройки Hibernate -->
+            <property name="hibernate.hbm2ddl.auto" value="none"/>
+            <property name="hibernate.dialect" value="org.hibernate.dialect.PostgreSQLDialect"/>
+            <property name="hibernate.show_sql" value="true"/>
+            <property name="hibernate.format_sql" value="true"/>
+            <property name="hibernate.jdbc.time_zone" value="UTC"/>
+        </properties>
+    </persistence-unit>
+
+    <!-- Скопировано по инструкции выше -->
+    <persistence-unit name="rococo-museum" transaction-type="RESOURCE_LOCAL">
+        <provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
+
+        <!-- Путь до Enity -->
+        <class>ru.gallery.data.entity.MuseumEntity</class>
+
+        <properties>
+            <!-- Настройки JDBC -->
+            <property name="jakarta.persistence.jdbc.driver" value="org.postgresql.Driver"/>
+            <!-- Путь до базы rococo-museum -->
+            <property name="jakarta.persistence.jdbc.url" value="jdbc:postgresql://ru.tuna.am:37038/rococo-museum"/>
+            <property name="jakarta.persistence.jdbc.user" value="postgres"/>
+            <property name="jakarta.persistence.jdbc.password" value="secret"/>
+
+            <!-- Настройки Hibernate -->
+            <property name="hibernate.hbm2ddl.auto" value="none"/>
+            <property name="hibernate.dialect" value="org.hibernate.dialect.PostgreSQLDialect"/>
+        </properties>
+    </persistence-unit>
+
 </persistence>

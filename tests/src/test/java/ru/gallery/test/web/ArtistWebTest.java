@@ -14,7 +14,6 @@ import static ru.gallery.utils.DataUtils.DEFAULT_USERNAME;
 
 public class ArtistWebTest extends BaseTest {
 
-    private static final Config CFG = Config.getInstance();
     private final HeaderElement headerPage = new HeaderElement();
     private final ArtistPage artistPage = new ArtistPage();
 

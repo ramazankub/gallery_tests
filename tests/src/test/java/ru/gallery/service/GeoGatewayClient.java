@@ -1,0 +1,21 @@
+package ru.gallery.service;
+
+import io.qameta.allure.Step;
+import io.restassured.response.Response;
+
+public class GeoGatewayClient extends RestAssuredBaseClient {
+    private final String path = "/api/country";
+
+    @Step("Запрос на получение информации о странах")
+    public Response getCountries(int page, int size, String sort, String bearerToken) {
+        var request = spec
+                .log().all()
+                .header(AUTH_HEADER, bearerToken)
+                .queryParam("page", page)
+                .queryParam("size", size);
+        if (sort != null && !sort.isEmpty()) {
+            request.queryParam("sort", sort);
+        }
+        return request.when().get(path);
+    }
+}

@@ -1,7 +1,10 @@
 package ru.gallery.page;
 
+import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.SelenideElement;
 import io.qameta.allure.Step;
+
+import java.time.Duration;
 
 import static com.codeborne.selenide.Condition.text;
 import static com.codeborne.selenide.Selenide.$x;
@@ -19,7 +22,9 @@ public abstract class BasePage<T extends BasePage<T>> {
 
     private static final String PAINTING_ADDED = "Добавлена картина: ";
 
-    private final SelenideElement toast = $x("//div[@data-testid='toast']");
+    private final SelenideElement
+            toast = $x("//div[@data-testid='toast']"),
+            artistNameField = $x("//*[@class='input' and @placeholder='Введите имя художника...']");
 
     @SuppressWarnings("unchecked")
     private T self() {
@@ -59,5 +64,15 @@ public abstract class BasePage<T extends BasePage<T>> {
     @Step("Проверка тоста")
     private void checkToast(String elementText) {
         toast.shouldHave(text(elementText));
+    }
+
+    @Step("Клик на элемент по локатору")
+    public void clickByLocator(SelenideElement element) {
+        element.shouldBe(Condition.visible).click();
+    }
+
+    @Step("Проверить видимость элемента")
+    public void checkElementVisible(SelenideElement element) {
+        element.shouldBe(Condition.visible, Duration.ofSeconds(4));
     }
 }

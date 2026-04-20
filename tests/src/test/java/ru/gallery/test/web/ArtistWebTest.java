@@ -9,6 +9,9 @@ import ru.gallery.page.element.HeaderElement;
 import ru.gallery.utils.AuthWebUtils;
 import ru.gallery.utils.DataUtils;
 
+import static ru.gallery.utils.DataUtils.DEFAULT_PASSWORD;
+import static ru.gallery.utils.DataUtils.DEFAULT_USERNAME;
+
 public class ArtistWebTest extends BaseTest {
 
     private static final Config CFG = Config.getInstance();
@@ -17,7 +20,7 @@ public class ArtistWebTest extends BaseTest {
 
     @BeforeEach
     void authUser() {
-        AuthWebUtils.authUser("Admin", "123");
+        AuthWebUtils.authUser(DEFAULT_USERNAME, DEFAULT_PASSWORD);
     }
 
     @Test

@@ -20,7 +20,7 @@ public class MuseumWebTest extends BaseTest {
     // и прокидывать токен в куки браузера, но для простоты так тоже пойдет
     @BeforeEach
     void authUser() {
-        AuthWebUtils.authUser(DEFAULT_USERNAME, DEFAULT_PASSWORD);
+        AuthWebUtils.authUser("Admin", "123");
     }
 
     @Test

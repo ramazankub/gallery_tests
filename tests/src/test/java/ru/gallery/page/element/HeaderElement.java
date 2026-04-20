@@ -2,6 +2,7 @@ package ru.gallery.page.element;
 
 import com.codeborne.selenide.SelenideElement;
 import io.qameta.allure.Step;
+import ru.gallery.page.BasePage;
 import ru.gallery.page.LoginPage;
 import ru.gallery.page.MainPage;
 import ru.gallery.utils.DataUtils;
@@ -13,7 +14,7 @@ import static com.codeborne.selenide.Condition.visible;
 import static com.codeborne.selenide.Selenide.$x;
 
 // Выделяем в отдельный элемент, т.к. он присутствует почти на всех страницах
-public class HeaderElement {
+public class HeaderElement extends BasePage<HeaderElement> {
 
     private static final SelenideElement mainButton = $x("//h1");
 
@@ -77,10 +78,16 @@ public class HeaderElement {
         return new LoginPage();
     }
 
+    @Step("Клик по кнопке художники в хедере")
+    public void artistsButtonClick() {
+        clickByLocator(artistsButton);
+    }
+
     @Nonnull
     @Step("Нажать на кнопку 'Главная страница'")
     public MainPage clickMainButton() {
         mainButton.click();
         return new MainPage();
     }
+
 }

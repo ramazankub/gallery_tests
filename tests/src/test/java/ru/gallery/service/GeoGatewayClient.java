@@ -8,14 +8,10 @@ public class GeoGatewayClient extends RestAssuredBaseClient {
 
     @Step("Запрос на получение информации о странах")
     public Response getCountries(int page, int size, String sort, String bearerToken) {
-        var request = spec
-                .log().all()
+        return  spec
                 .header(AUTH_HEADER, bearerToken)
                 .queryParam("page", page)
-                .queryParam("size", size);
-        if (sort != null && !sort.isEmpty()) {
-            request.queryParam("sort", sort);
-        }
-        return request.when().get(path);
+                .queryParam("size", size)
+                .get(path);
     }
 }

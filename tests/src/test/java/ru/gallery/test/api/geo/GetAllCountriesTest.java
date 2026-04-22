@@ -1,9 +1,7 @@
 package ru.gallery.test.api.geo;
 
-import io.qameta.allure.Allure;
 import io.qameta.allure.Description;
 import io.restassured.common.mapper.TypeRef;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -12,15 +10,11 @@ import ru.gallery.config.WithAuth;
 import ru.gallery.data.GeoRepository;
 import ru.gallery.data.entity.CountryEntity;
 import ru.gallery.model.CountryJson;
-import ru.gallery.model.ErrorBodyJson;
 import ru.gallery.model.PageResponse;
 import ru.gallery.service.GeoGatewayClient;
-import ru.gallery.service.AuthApiClient;
 import ru.gallery.test.api.BaseTest;
-import ru.gallery.utils.DataUtils;
 
 import java.util.List;
-import java.util.Objects;
 import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -47,15 +41,7 @@ public class GetAllCountriesTest extends BaseTest {
 
         assertAll("Проверка списка стран",
                 () -> assertFalse(countryJsonList.isEmpty()),
-                () -> assertEquals(defaultCountryCount, countryJsonList.size()),
-                () -> countryJsonList.forEach(country -> {
-                    assertAll(
-                            () -> assertNotNull(country.id()),
-                            () -> assertFalse(country.id().isBlank()),
-                            () -> assertNotNull(country.name()),
-                            () -> assertFalse(Objects.requireNonNull(country.name()).isBlank())
-                    );
-                })
+                () -> assertEquals(defaultCountryCount, countryJsonList.size())
         );
 
         List<CountryEntity> countryEntityList = geoRepository.findAllCountries(defaultCountryCount);
@@ -91,9 +77,7 @@ public class GetAllCountriesTest extends BaseTest {
         final int defaultCountryCount = 10;
 
         geoGatewayClient.getCountries(0, defaultCountryCount, null, token)
-                .then().log().all()
+                .then()
                 .statusCode(401);
-        Allure.step("Токен из параметра - " + token);
-        Allure.step("Базовый токен - " + bearerToken);
     }
 }

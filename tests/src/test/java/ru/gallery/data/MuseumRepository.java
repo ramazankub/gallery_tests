@@ -27,10 +27,11 @@ public class MuseumRepository {
     }
 
     @Step("Запрос на получение всех музеев")
-    public List<MuseumEntity> getMuseums() {
+    public List<MuseumEntity> getMuseums(int count) {
         String sql = "SELECT * FROM museum";
         return entityManager
                 .createNativeQuery(sql, MuseumEntity.class)
+                .setMaxResults(count)
                 .getResultList();
     }
 

@@ -3,7 +3,6 @@ package ru.gallery.test.web;
 import io.qameta.allure.Description;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import ru.gallery.config.Config;
 import ru.gallery.page.ArtistPage;
 import ru.gallery.page.element.HeaderElement;
 import ru.gallery.utils.AuthWebUtils;
@@ -77,6 +76,5 @@ public class ArtistWebTest extends BaseTest {
         artistPage.setArtistName(editedArtistName);
         artistPage.setArtistBiography(editBio);
         artistPage.saveInfo();
-        // Твой код
     }
 }
